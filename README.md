@@ -1,4 +1,4 @@
-# joker-rematered
+# joker-remastered
 ## Get your daily jokes
 
 # Requirements
@@ -12,7 +12,7 @@
 
 ### Clone
 ```bash
-git clone https://github.com/GoGei/joker-rematered.git
+git clone https://github.com/GoGei/joker-remastered.git
 ```
 
 ### Setup env
