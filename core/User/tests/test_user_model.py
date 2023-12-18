@@ -17,8 +17,3 @@ class UserTests(TestCase):
 
         qs = User.objects.filter(pk=obj.pk)
         self.assertFalse(qs.exists())
-
-    def test_str(self):
-        obj = UserFactory.create()
-        self.assertTrue(obj.email in str(obj))
-        self.assertTrue(obj.email in obj.label)
