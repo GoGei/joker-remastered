@@ -15,15 +15,6 @@
 git clone https://github.com/GoGei/joker-remastered.git
 ```
 
-### Setup env
-```bash
-cd joker-rematered/
-python3.10 -m venv env
-source env/bin/activate
-pip install -r requirements.txt
-python manage.py migrate
-```
-
 ### Add hosts
 * Ubuntu: /etc/hosts
 * Windows: c:\Windows\System32\Drivers\etc\hosts
@@ -43,4 +34,13 @@ create database joker_remastered with owner joker_remastered;
 ### Copy settings
 ```bash
 cp configs/example.py configs/settings.py
+```
+
+### Setup env
+```bash
+cd joker-remastered/
+python3.10 -m venv env
+source env/bin/activate
+pip install -r requirements.txt
+python manage.py migrate
 ```

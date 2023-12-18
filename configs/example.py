@@ -11,7 +11,7 @@ TEMPLATES[0]['OPTIONS']['debug'] = True
 SITE_URL = 'joker-remastered.local'
 SITE_SCHEME = "http"
 PARENT_HOST = ".%s" % SITE_URL
-HOST_PORT = None
+HOST_PORT = '4482'
 SITE = "%s://%s:%s" % (SITE_SCHEME, SITE_URL, HOST_PORT)
 
 DATABASES['default']['PASSWORD'] = 'joker_remastered'
