@@ -1,12 +1,20 @@
-from pathlib import Path
+import os
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.normpath(os.path.join(os.path.dirname(__file__))) + '/'
 
-SECRET_KEY = 'django-insecure-(s1(nqr5*60#(p&gde^-n2ndb$ai7uk=l7l79*irm8l8fatib3'
+SECRET_KEY = None
+HASHID_SECRET = None
 DEBUG = True
+API_DOCUMENTATION = True
+DEBUG_TOOLBAR = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
+SITE_URL = 'joker-remastered.local'
+SITE_SCHEME = "http"
+PARENT_HOST = ".%s" % SITE_URL
+HOST_PORT = None
+SITE = "%s://%s:%s" % (SITE_SCHEME, SITE_URL, HOST_PORT)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -15,24 +23,67 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'django_extensions',
+    'django_hosts',
+    'django_filters',
+    'widget_tweaks',
+    'django_tables2',
+    'corsheaders',
+    'rest_framework',
+    'drf_yasg2',
+    'ckeditor',
+    'ckeditor_uploader',
+
+    'core.User',
 ]
 
+AUTH_USER_MODEL = 'User.User'
+
 MIDDLEWARE = [
+    'django_hosts.middleware.HostsRequestMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_hosts.middleware.HostsResponseMiddleware',
 ]
 
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CSRF_COOKIE_DOMAIN = '.joker-remastered.local'
+SESSION_COOKIE_DOMAIN = '.joker-remastered.local'
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
+ROOT_HOSTCONF = 'hosts'
+DEFAULT_HOST = 'public'
 ROOT_URLCONF = 'urls'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = ''
+DEFAULT_FROM_EMAIL = ''
+EMAIL_HOST_PASSWORD = ''
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            # BASE_DIR + 'core/templates/',
+            # BASE_DIR + 'Api/templates/',
+            # BASE_DIR + 'Admin/templates/',
+            # BASE_DIR + 'Public/templates/',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -47,23 +98,82 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'joker_remastered',
+        'USER': 'joker_remastered',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+        'ATOMIC_REQUESTS': True,
     }
 }
 
-LANGUAGE_CODE = 'en-us'
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+LANGUAGE_CODE = 'en'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
-
+TIME_ZONE_DEFAULT = 'Europe/Kyiv'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+
+STATIC_ROOT = BASE_DIR + 'static/'
+MEDIA_ROOT = BASE_DIR + 'media/'
+STATICFILES_DIRS = [
+    BASE_DIR + 'htdocs/'
+]
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 50,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'COERCE_DECIMAL_TO_STRING': False,
+}
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_SAVE_EVERY_REQUEST = True
+SESSION_COOKIE_AGE = 60 * 60 * 24  # 24h
+
+CKEDITOR_UPLOAD_PATH = BASE_DIR + 'media/ckeditoruploads/'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+
+CELERY_BROKER_URL = ''
+CELERY_RESULT_BACKEND = 'rpc'
+CELERY_ACCEPT_CONTENT = ['pickle', 'json']
+CELERY_TASK_SERIALIZER = 'pickle'
+CELERY_RESULT_SERIALIZER = 'pickle'
+CELERY_TASK_RESULT_EXPIRES = 60
+CELERY_QUEUES = {
+    'celery': {'exchange': 'celery',
+               'exchange_type': 'direct',
+               'durable': True},
+}
