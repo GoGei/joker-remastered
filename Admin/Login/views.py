@@ -2,8 +2,9 @@ from django_hosts import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.utils.translation import gettext_lazy as _
 from core.Utils.Access.user_check_functions import manager_check
-from .forms import LoginForm
+from .forms import LoginForm, ForgotPasswordForm
 
 
 def login_view(request):
@@ -20,7 +21,7 @@ def login_view(request):
         password = data.get('password')
         user = authenticate(email=email, password=password)
         if user is None:
-            form.add_error(None, 'User with this email and password not found or inactive')
+            form.add_error(None, _('User with this email and password not found or inactive'))
         elif (user.is_staff or user.is_superuser) and user.is_active:
             login(request, user)
 
@@ -33,11 +34,23 @@ def login_view(request):
             response.set_cookie('email', user.email)
             return response
         elif not (user.is_staff or user.is_superuser):
-            form.add_error(None, 'User is not a staff ot superuser')
+            form.add_error(None, _('User is not a staff ot superuser'))
         else:
-            form.add_error(None, 'User is not logged in')
+            form.add_error(None, _('User is not logged in'))
 
     return render(request, 'Admin/Login/login.html', {'form': form})
+
+
+def forgot_password_view(request):
+    form = ForgotPasswordForm(request.POST or None)
+    if form.is_valid():
+        form.send_forgot_password()
+        return redirect(reverse('admin-forgot-password-success', host='admin'))
+    return render(request, 'Admin/Login/forgot_password.html', {'form': form})
+
+
+def forgot_password_success_view(request):
+    return render(request, 'Admin/Login/forgot_password_success.html')
 
 
 def logout_view(request):
