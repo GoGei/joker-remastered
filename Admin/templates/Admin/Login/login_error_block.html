@@ -1,0 +1,9 @@
+{% if field.errors %}
+  <div>
+    {% for error in field.errors %}
+      <div class="form-text error">
+        {{ error }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
