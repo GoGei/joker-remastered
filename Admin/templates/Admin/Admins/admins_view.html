@@ -1,0 +1,81 @@
+{% extends 'Admin/Admins/admins_base.html' %}
+{% load i18n static hosts %}
+
+{% block pagetitle %}
+  {% trans 'Admin' %}: {{ admin.label }}
+{% endblock %}
+
+{% block action-area %}
+  <a class="btn btn-primary" type="button"
+     href="{% host_url 'admin-admins-list' host 'admin' %}">
+    <i class="bx bx-arrow-back me-1"></i> {% trans 'Back to list' %}</a>
+  {% if request.user.is_superuser %}
+    <a class="btn btn-info" type="button"
+       href="{% host_url 'admin-admins-edit' admin.id host 'admin' %}">
+      <i class="bx bx-pencil me-1"></i> {% trans 'Edit' %}</a>
+    <a class="btn btn-info" type="button"
+       href="{% host_url 'admin-admins-set-password' admin.id host 'admin' %}">
+      <i class="bx bx-key me-1"></i> {% trans 'Set password' %}</a>
+  {% endif %}
+{% endblock %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  <li class="breadcrumb-item" aria-current="page">
+    <a href="{% host_url 'admin-admins-view' admin.id host 'admin' %}">{{ admin.label }}</a>
+  </li>
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col">
+      <div class="card mb-4">
+        <h5 class="card-header">{% trans 'Admin card' %}</h5>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-4">{% trans 'Email' %}</div>
+            <div class="col-8"><a href="mailto:{{ admin.email }}">{{ admin.email }}</a></div>
+          </div>
+          <div class="row">
+            <div class="col-4">{% trans 'First name' %}</div>
+            <div class="col-8">{{ admin.first_name|default:'' }}</div>
+          </div>
+          <div class="row">
+            <div class="col-4">{% trans 'Last name' %}</div>
+            <div class="col-8">{{ admin.last_name|default:'' }}</div>
+          </div>
+          <div class="row">
+            <div class="col-4">{% trans 'Is active' %}</div>
+            <div class="col-8">
+              {% if admin.is_active %}
+                {% trans 'Active' %}
+              {% else %}
+                {% trans 'Not active' %}
+              {% endif %}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4">{% trans 'Is staff' %}</div>
+            <div class="col-8">
+              {% if admin.is_staff %}
+                {% trans 'Staff' %}
+              {% else %}
+                {% trans 'Not staff' %}
+              {% endif %}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4">{% trans 'Is superuser' %}</div>
+            <div class="col-8">
+              {% if admin.is_superuser %}
+                {% trans 'Superuser' %}
+              {% else %}
+                {% trans 'Not superuser' %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

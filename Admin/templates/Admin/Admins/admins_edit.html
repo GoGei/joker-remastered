@@ -1,0 +1,17 @@
+{% extends 'Admin/Admins/admins_base.html' %}
+{% load i18n static hosts %}
+
+{% block pagetitle %}
+  {% trans 'Edit admin' %}
+{% endblock %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  <li class="breadcrumb-item" aria-current="page">
+    <a href="{% host_url 'admin-admins-view' admin.id host 'admin' %}">{{ admin.label }}</a>
+  </li>
+{% endblock %}
+
+{% block content %}
+  {% include 'Admin/core/base_form.html' with form=form %}
+{% endblock %}

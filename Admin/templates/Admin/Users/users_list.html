@@ -1,0 +1,7 @@
+{% extends 'Admin/Users/users_base.html' %}
+{% load i18n static hosts django_tables2 %}
+
+{% block content %}
+  {% include 'Admin/core/base_filter_form.html' with filter=table.filter %}
+  {% render_table table.body %}
+{% endblock %}

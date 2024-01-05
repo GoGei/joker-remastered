@@ -1,0 +1,56 @@
+{% extends 'Admin/Joke/joke_base.html' %}
+{% load i18n static hosts %}
+
+{% block pagetitle %}
+  {% trans 'Joke' %}: {{ joke.label }}
+{% endblock %}
+
+{% block action-area %}
+  <a class="btn btn-primary" type="button"
+     href="{% host_url 'admin-jokes-list' host 'admin' %}">
+    <i class="bx bx-arrow-back me-1"></i> {% trans 'Back to list' %}</a>
+  <a class="btn btn-info" type="button"
+     href="{% host_url 'admin-jokes-edit' joke.id host 'admin' %}">
+    <i class="bx bx-pencil me-1"></i> {% trans 'Edit' %}</a>
+{% endblock %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  <li class="breadcrumb-item" aria-current="page">
+    <a href="{% host_url 'admin-jokes-view' joke.id host 'admin' %}">{{ joke.label }}</a>
+  </li>
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col">
+      <div class="card mb-4">
+        <h5 class="card-header">{% trans 'Joke card' %}</h5>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-4">{% trans 'ID' %}</div>
+            <div class="col-8">{{ joke.id }}</div>
+          </div>
+          <div class="row">
+            <div class="col-4">{% trans 'Slug' %}</div>
+            <div class="col-8">{{ joke.slug|default:'' }}</div>
+          </div>
+          <div class="row">
+            <div class="col-4">{% trans 'Is active' %}</div>
+            <div class="col-8">
+              {% if joke.is_active %}
+                {% trans 'Active' %}
+              {% else %}
+                {% trans 'Not active' %}
+              {% endif %}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4">{% trans 'Text' %}</div>
+            <div class="col-8">{{ joke.text|safe|escape }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

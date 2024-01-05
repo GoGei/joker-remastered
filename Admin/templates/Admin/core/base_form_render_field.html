@@ -1,0 +1,27 @@
+{% load widget_tweaks %}
+
+{% with field.field.widget.attrs.class as field_class %}
+  {% if field.field.widget == 'DateInput' %}
+    <div class="input-group date">
+      {% if field_class %}
+        {% render_field field class=field_class %}
+      {% else %}
+        {% render_field field class="form-control" %}
+      {% endif %}
+      <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+    </div>
+  {% comment %}{% elif field.field.widget.input_type == 'password' %}
+    {% if field_class %}
+      {% render_field field class=field_class %}
+    {% else %}
+      {% render_field field class="form-control" %}
+    {% endif %}
+    <span id="passwordToggler" class="input-group-text cursor-pointer">
+      <i class="bx bx-hide"></i>
+    </span>{% endcomment %}
+  {% elif field_class %}
+    {% render_field field class=field_class %}
+  {% else %}
+    {% render_field field class="form-control" %}
+  {% endif %}
+{% endwith %}

@@ -4,6 +4,7 @@ from slugify import slugify
 from django.db import models, transaction
 from django.utils import timezone
 from django.utils.text import slugify
+from django.utils.html import strip_tags
 from django.conf import settings
 from .exceptions import SlugifyFieldNotSetException
 
@@ -58,6 +59,7 @@ class CrmMixin(models.Model):
         self.archived_by = None
         self.modify(restored_by)
 
+    @property
     def is_active(self) -> bool:
         return not bool(self.archived_stamp)
 
@@ -107,6 +109,29 @@ class LikeMixin(models.Model):
         self.save()
 
 
+class SlugifyHTMLMixin(SlugifyMixin):
+    @classmethod
+    def slugify_without_html(cls, value):
+        return slugify(strip_tags(value))
+
+    @classmethod
+    def is_allowed_to_assign_slug(cls, value, instance=None):
+        slug = cls.slugify_without_html(value)
+        qs = cls.objects.exclude(slug__isnull=True, slug__exact='').filter(slug=slug)
+        if instance:
+            qs = qs.exclude(pk=instance.pk)
+        return not qs.exists()
+
+    def assign_slug(self):
+        if not self.SLUGIFY_FIELD:
+            raise SlugifyFieldNotSetException('Field for slugify not set!')
+
+        slug = self.slugify_without_html(getattr(self, self.SLUGIFY_FIELD))
+        self.slug = slug if len(slug) <= 255 else slug[:255]
+        self.save()
+        return self
+
+
 class ExportableMixin(models.Model):
     class Meta:
         abstract = True
@@ -124,8 +149,15 @@ class ExportableMixin(models.Model):
         raise NotImplementedError
 
     @classmethod
+    def validate_data(cls, data):
+        raise NotImplementedError
+
+    @classmethod
     @transaction.atomic
     def import_from_data(cls, data):
         cls.clear_previous()
+        is_valid = cls.validate_data(data)
+        if not is_valid:
+            raise Exception('Invalid data')
         cls.import_data(data)
         return True

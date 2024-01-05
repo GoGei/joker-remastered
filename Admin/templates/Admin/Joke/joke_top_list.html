@@ -1,0 +1,23 @@
+{% extends 'Admin/Joke/joke_base.html' %}
+{% load i18n static hosts django_tables2 %}
+
+{% block pagetitle %}
+  {% trans 'Top jokes' %}
+{% endblock %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  <li class="breadcrumb-item" aria-current="page">
+    <a href="{% host_url 'admin-jokes-top-list' host 'admin' %}">{% trans 'Top' %}</a>
+  </li>
+{% endblock %}
+
+{% block action-area %}
+  <a class="btn btn-primary" type="button"
+     href="{% host_url 'admin-jokes-list' host 'admin' %}">
+    <i class="bx bx-arrow-back me-1"></i> {% trans 'Back to list' %}</a>
+{% endblock %}
+
+{% block content %}
+  {% render_table table.body %}
+{% endblock %}

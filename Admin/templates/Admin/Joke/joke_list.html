@@ -1,0 +1,22 @@
+{% extends 'Admin/Joke/joke_base.html' %}
+{% load i18n static hosts django_tables2 %}
+
+{% block action-area %}
+  <a class="btn btn-primary" type="button"
+     href="{% host_url 'admin-jokes-top-list' host 'admin' %}">
+    <i class="bx bx-crown me-1"></i> {% trans 'Top jokes' %}</a>
+  <a class="btn btn-info" type="button"
+     href="{% host_url 'admin-jokes-add' host 'admin' %}">
+    <i class="bx bx-plus me-1"></i> {% trans 'Add' %}</a>
+  <a class="btn btn-secondary" type="button"
+     href="{% host_url 'admin-jokes-export' host 'admin' %}">
+    <i class="bx bx-download me-1"></i> {% trans 'Export' %}</a>
+  <a class="btn btn-secondary" type="button"
+     href="{% host_url 'admin-jokes-import' host 'admin' %}">
+    <i class="bx bx-upload me-1"></i> {% trans 'import' %}</a>
+{% endblock %}
+
+{% block content %}
+  {% include 'Admin/core/base_filter_form.html' with filter=table.filter %}
+  {% render_table table.body %}
+{% endblock %}

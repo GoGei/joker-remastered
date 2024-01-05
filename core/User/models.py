@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from django.db import models
+from django.db.models import Q
+from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 
 
@@ -33,6 +35,17 @@ class UserManager(BaseUserManager):
 
         return self._create_user(email, password, **extra_fields)
 
+    def managers(self):
+        q = Q(is_staff=True) | Q(is_superuser=True)
+        return self.filter(q)
+
+    def users(self):
+        q = Q(is_staff=True) | Q(is_superuser=True)
+        return self.exclude(q)
+
+    def active(self):
+        return self.filter(is_active=True)
+
 
 class User(AbstractBaseUser):
     email = models.EmailField(max_length=255, unique=True, db_index=True)
@@ -54,3 +67,20 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.email or self.id
+
+    @property
+    def label(self):
+        result = ' '.join(list(filter(lambda x: bool(x), [self.first_name, self.last_name])))
+        if not result:
+            result = str(self)
+        return result
+
+    @property
+    def role_label(self):
+        if self.is_superuser:
+            result = _('Superuser')
+        elif self.is_staff:
+            result = _('Manager')
+        else:
+            result = _('User')
+        return result

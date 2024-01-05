@@ -1,0 +1,5 @@
+{% load i18n hosts %}
+
+<a href="{% host_url 'admin-users-view' record.id host 'admin' %}">
+  {{ record.id }}
+</a>

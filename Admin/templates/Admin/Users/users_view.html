@@ -1,0 +1,53 @@
+{% extends 'Admin/Users/users_base.html' %}
+{% load i18n static hosts %}
+
+{% block pagetitle %}
+  {% trans 'User' %}: {{ user.label }}
+{% endblock %}
+
+{% block action-area %}
+  <a class="btn btn-primary" type="button"
+     href="{% host_url 'admin-users-list' host 'admin' %}">
+    <i class="bx bx-arrow-back me-1"></i> {% trans 'Back to list' %}</a>
+{% endblock %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  <li class="breadcrumb-item" aria-current="page">
+    <a href="{% host_url 'admin-users-view' user.id host 'admin' %}">{{ user.label }}</a>
+  </li>
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col">
+      <div class="card mb-4">
+        <h5 class="card-header">{% trans 'User card' %}</h5>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-4">{% trans 'Email' %}</div>
+            <div class="col-8"><a href="mailto:{{ user.email }}">{{ user.email }}</a></div>
+          </div>
+          <div class="row">
+            <div class="col-4">{% trans 'First name' %}</div>
+            <div class="col-8">{{ user.first_name|default:'' }}</div>
+          </div>
+          <div class="row">
+            <div class="col-4">{% trans 'Last name' %}</div>
+            <div class="col-8">{{ user.last_name|default:'' }}</div>
+          </div>
+          <div class="row">
+            <div class="col-4">{% trans 'Is active' %}</div>
+            <div class="col-8">
+              {% if user.is_active %}
+                {% trans 'Active' %}
+              {% else %}
+                {% trans 'Not active' %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

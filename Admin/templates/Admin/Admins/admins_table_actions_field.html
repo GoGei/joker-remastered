@@ -1,0 +1,25 @@
+{% load i18n hosts %}
+
+<div class="dropdown">
+  <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false">
+    <i class="bx bx-dots-vertical-rounded"></i>
+  </button>
+  <div class="dropdown-menu" style="">
+    <a class="dropdown-item" href="{% host_url 'admin-admins-view' record.id host 'admin' %}">
+      <i class="bx bxs-show me-1"></i> {% trans 'View' %}</a>
+
+    {% if request.user.is_superuser %}
+      <a class="dropdown-item" href="{% host_url 'admin-admins-edit' record.id host 'admin' %}">
+        <i class="bx bx-edit-alt me-1"></i> {% trans 'Edit' %}</a>
+      {% if record.is_active %}
+        <a class="dropdown-item" href="{% host_url 'admin-admins-deactivate' record.id host 'admin' %}">
+          <i class="bx bx-trash-alt me-1"></i> {% trans 'Deactivate' %}</a>
+      {% else %}
+        <a class="dropdown-item" href="{% host_url 'admin-admins-activate' record.id host 'admin' %}">
+          <i class="bx bx-reset me-1"></i> {% trans 'Activate' %}</a>
+      {% endif %}
+      <a class="dropdown-item" href="{% host_url 'admin-admins-set-password' record.id host 'admin' %}">
+        <i class="bx bx-key me-1"></i> {% trans 'Set password' %}</a>
+    {% endif %}
+  </div>
+</div>
