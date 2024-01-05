@@ -6,4 +6,5 @@ urlpatterns = [
     url('^', include('Admin.Login.urls')),
 
     url('^admins/', include('Admin.Admins.urls')),
+    url('^users/', include('Admin.Users.urls')),
 ]

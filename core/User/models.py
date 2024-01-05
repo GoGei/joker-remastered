@@ -39,6 +39,10 @@ class UserManager(BaseUserManager):
         q = Q(is_staff=True) | Q(is_superuser=True)
         return self.filter(q)
 
+    def users(self):
+        q = Q(is_staff=True) | Q(is_superuser=True)
+        return self.exclude(q)
+
     def active(self):
         return self.filter(is_active=True)
 
