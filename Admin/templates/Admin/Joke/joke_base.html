@@ -1,0 +1,18 @@
+{% extends 'Admin/admin_base.html' %}
+{% load i18n static hosts %}
+
+{% block menu-jokes %} active {% endblock %}
+
+{% block pagetitle %}
+  {% trans 'Jokes' %}
+{% endblock %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  <li class="breadcrumb-item" aria-current="page">
+    <a href="{% host_url 'admin-jokes-list' host 'admin' %}">{% trans 'Jokes' %}</a>
+  </li>
+{% endblock %}
+
+{% block extrajs %}
+{% endblock %}

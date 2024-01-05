@@ -37,6 +37,7 @@ INSTALLED_APPS = [
 
     'core.Utils',
     'core.User',
+    'core.Joke',
 ]
 
 AUTH_USER_MODEL = 'User.User'
@@ -157,6 +158,24 @@ SESSION_SAVE_EVERY_REQUEST = True
 SESSION_COOKIE_AGE = 60 * 60 * 24  # 24h
 
 CKEDITOR_UPLOAD_PATH = BASE_DIR + 'media/ckeditoruploads/'
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+    },
+    'jokes': {
+        'toolbar': [
+            ['Undo', 'Redo',
+             '-', 'Bold', 'Italic', 'Underline',
+             '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock',
+             '-', 'Outdent', 'Indent',
+             'Format',
+             ],
+            ['Maximize']
+        ],
+        'toolbarCanCollapse': True,
+        'width': '100%',
+    }
+}
 
 CACHES = {
     'default': {

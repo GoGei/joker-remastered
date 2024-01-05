@@ -2,13 +2,11 @@
 {% load i18n static hosts django_tables2 %}
 
 {% block action-area %}
-  <li class="nav-item">
-    {% if request.user.is_superuser %}
-      <a class="nav-link active btn btn-primary" type="button"
-         href="{% host_url 'admin-admins-add' host 'admin' %}">
-        <i class="bx bx-plus me-1"></i> {% trans 'Add' %}</a>
-    {% endif %}
-  </li>
+  {% if request.user.is_superuser %}
+    <a class="btn btn-primary" type="button"
+       href="{% host_url 'admin-admins-add' host 'admin' %}">
+      <i class="bx bx-plus me-1"></i> {% trans 'Add' %}</a>
+  {% endif %}
 {% endblock %}
 
 {% block content %}

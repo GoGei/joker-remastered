@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib import messages
 from django.forms import model_to_dict
 from django.shortcuts import render, redirect, get_object_or_404
