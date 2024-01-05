@@ -58,6 +58,7 @@ class CrmMixin(models.Model):
         self.archived_by = None
         self.modify(restored_by)
 
+    @property
     def is_active(self) -> bool:
         return not bool(self.archived_stamp)
 

@@ -46,3 +46,10 @@ class BaseSearchFilterMixin(BaseFilterMixin):
     class Meta(BaseFilterMixin.Meta):
         fields = BaseFilterMixin.Meta.fields + ('search',)
         search_fields = ()
+
+
+class BaseFilterForm(BaseCrmActiveFilterMixin, BaseSearchFilterMixin):
+    class Meta(BaseCrmActiveFilterMixin.Meta, BaseSearchFilterMixin.Meta):
+        fields = BaseCrmActiveFilterMixin.Meta.fields + BaseSearchFilterMixin.Meta.fields
+        search_fields = ()
+        model = None

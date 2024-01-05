@@ -1,0 +1,10 @@
+{% extends 'Admin/Admins/admins_base.html' %}
+{% load i18n static hosts %}
+
+{% block pagetitle %}
+  {% trans 'Add admin' %}
+{% endblock %}
+
+{% block content %}
+  {% include 'Admin/core/base_form.html' with form=form %}
+{% endblock %}

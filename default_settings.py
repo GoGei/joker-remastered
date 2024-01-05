@@ -179,3 +179,5 @@ CELERY_QUEUES = {
                'exchange_type': 'direct',
                'durable': True},
 }
+
+ITEMS_PER_PAGE = 20
