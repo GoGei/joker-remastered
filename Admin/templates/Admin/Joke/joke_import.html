@@ -1,0 +1,10 @@
+{% extends 'Admin/Joke/joke_base.html' %}
+{% load i18n static hosts %}
+
+{% block pagetitle %}
+  {% trans 'Import jokes' %}
+{% endblock %}
+
+{% block content %}
+  {% include 'Admin/core/base_form.html' with form=form %}
+{% endblock %}

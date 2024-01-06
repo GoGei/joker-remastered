@@ -1,0 +1,55 @@
+{% load i18n static django_tables2 %}
+
+{% if table.filter %}
+  {% include 'Admin/core/base_filter_form.html' with filter=table.filter %}
+{% endif %}
+
+{% if table.body.paginated_rows %}
+  {% render_table table.body %}
+{% else %}
+  {% with table.on_empty as empty_data %}
+    {% if request.GET %}
+      <div class="container-xxl container-p-y">
+        <div class="misc-wrapper text-center">
+          <h2 class="mb-2 mx-2">
+            {% trans 'Nothing found!' %}
+          </h2>
+          <p class="mb-4 mx-2">
+            {% trans 'Table has no records after filter!' %}
+          </p>
+          <div class="mt-4">
+            <img src="{% static 'sneat/assets/img/illustrations/girl-doing-yoga-light.png' %}"
+                 alt="girl-doing-yoga-light" width="500"
+                 class="img-fluid" data-app-dark-img="illustrations/girl-doing-yoga-dark.png"
+                 data-app-light-img="illustrations/girl-doing-yoga-light.png">
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="container-xxl container-p-y">
+        <div class="misc-wrapper text-center">
+          <h2 class="mb-2 mx-2">
+            {% if empty_data.title %}
+              {{ empty_data.title }}
+            {% else %}
+              {% trans 'Table is empty!' %}
+            {% endif %}
+          </h2>
+          <p class="mb-4 mx-2">
+            {% if empty_data.description %}
+              {{ empty_data.description }}
+            {% else %}
+              {% trans 'Table has no records, please add something' %}
+            {% endif %}
+          </p>
+          <div class="mt-4">
+            <img src="{% static 'sneat/assets/img/illustrations/girl-doing-yoga-light.png' %}"
+                 alt="girl-doing-yoga-light" width="500"
+                 class="img-fluid" data-app-dark-img="illustrations/girl-doing-yoga-dark.png"
+                 data-app-light-img="illustrations/girl-doing-yoga-light.png">
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  {% endwith %}
+{% endif %}

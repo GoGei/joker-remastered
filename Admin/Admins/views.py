@@ -50,8 +50,7 @@ def admins_add(request):
     if form_body.is_valid():
         admin = form_body.save()
         messages.success(request, _(f'Admin {admin.label} added'))
-        # return redirect(reverse('admin-admins-set-password'), host='admin')
-        return redirect(reverse('admin-admins-view', args=[admin.id], host='admin'))
+        return redirect(reverse('admin-admins-set-password', args=[admin.id], host='admin'))
 
     form = {
         'body': form_body,

@@ -1,0 +1,96 @@
+{% extends 'Admin/Joke/joke_base.html' %}
+{% load i18n static hosts filters %}
+
+{% block pagetitle %}
+  {% trans 'Default fixture' %}
+{% endblock %}
+
+{% block action-area %}
+  <a class="btn btn-primary" type="button"
+     href="{% host_url 'admin-jokes-list' host 'admin' %}">
+    <i class="bx bx-arrow-back me-1"></i> {% trans 'Back to list' %}</a>
+  <a class="btn btn-info" type="button"
+     href="{% host_url 'admin-jokes-load-default-fixture' host 'admin' %}">
+    <i class="bx bx-info-circle me-1"></i> {% trans 'Load default fixture' %}</a>
+{% endblock %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  <li class="breadcrumb-item" aria-current="page">
+    <a href="{% host_url 'admin-jokes-list' host 'admin' %}">{% trans 'Default fixture' %}</a>
+  </li>
+{% endblock %}
+
+{% block content %}
+  <div class="col">
+    <div class="nav-align-top mb-4">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+          <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#json-data"
+                  aria-controls="json-data" aria-selected="false">
+            {% trans 'JSON data' %}
+          </button>
+        </li>
+        <li class="nav-item">
+          <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab"
+                  data-bs-target="#table-data" aria-controls="table-data" aria-selected="true">
+            {% trans 'As table' %}
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane fade" id="json-data" role="tabpanel">
+          <pre id="json-container">{{ data|json_script:"json-data-template" }}</pre>
+        </div>
+        <div class="tab-pane fade active show" id="table-data" role="tabpanel">
+          <div class="card">
+            <div class="table-responsive text-nowrap">
+              <table class="table">
+                <thead>
+                <tr>
+                  <th>{% trans '#' %}</th>
+                  <th>{% trans 'Text' %}</th>
+                  <th>{% trans 'Slug' %}</th>
+                </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                {% for item in data %}
+                  <tr>
+                    <td scope="row">{{ forloop.counter }}</td>
+                    <td>
+                      {% with item.text|safe|escape|striptags as joke_text %}
+                        <span class="label label-default" data-toggle="tooltip" title="{{ joke_text }}">
+                    {{ joke_text|truncatechars:80 }}
+                    </span>
+                      {% endwith %}
+                    </td>
+                    <td>
+                      {% with item.slug|safe|escape as joke_slug %}
+                        <span class="label label-default" data-toggle="tooltip" title="{{ joke_slug }}">
+                    {{ joke_slug|truncatechars:60 }}
+                    </span>
+                      {% endwith %}
+                    </td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extrajs %}
+  <script>
+    $(document).ready(function () {
+      $('[data-toggle="tooltip"]').tooltip();
+
+      let jsonData = JSON.parse(document.getElementById('json-data-template').textContent);
+      document.getElementById('json-container').textContent = JSON.stringify(jsonData, null, 2);
+    });
+  </script>
+{% endblock %}

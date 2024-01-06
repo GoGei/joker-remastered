@@ -1,3 +1,5 @@
+import json
+
 from django import forms
 from django.utils.translation import gettext_lazy as _
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
@@ -8,7 +10,7 @@ from core.Joke.models import Joke
 
 class JokeFilterForm(BaseFilterForm):
     class Meta(BaseFilterForm.Meta):
-        search_fields = ('text',)
+        search_fields = ('text', 'slug')
         model = Joke
 
 
@@ -42,3 +44,29 @@ class JokeAddForm(JokeForm):
 
 class JokeEditForm(JokeForm):
     pass
+
+
+class JokeImportForm(forms.Form):
+    file = forms.FileField(label='Joke file', required=True,
+                           widget=forms.FileInput(attrs={'class': 'form-control', 'accept': '.json'}))
+
+    def clean_file(self):
+        file = self.cleaned_data.get('file')
+        if not file.name.endswith('.json'):
+            self.add_error('file', _('Only JSON files are allowed'))
+        return file
+
+    def run(self, data=None):
+        try:
+            if not data:
+                data = self.cleaned_data.get('file').read().decode()
+                data = json.loads(data)
+        except UnicodeDecodeError:
+            raise forms.ValidationError(_('Only JSON files are allowed'))
+        except json.decoder.JSONDecodeError:
+            raise forms.ValidationError(_('Invalid JSON file'))
+
+        try:
+            Joke.import_from_data(data)
+        except Exception as e:
+            raise forms.ValidationError(str(e))

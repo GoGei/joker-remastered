@@ -1,15 +1,30 @@
 from typing import List, Dict
 
 from django.db import models
-from django.utils import timezone
+from django.db.models import OuterRef, Subquery, Func, F
 from django.conf import settings
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
-from core.Utils.Mixins.models import CrmMixin, SlugifyMixin, ExportableMixin
+from core.Utils.Mixins.models import CrmMixin, SlugifyMixin, ExportableMixin, ActiveQuerySet
+
+
+class JokeQuerySet(ActiveQuerySet):
+    def annotate_likes(self):
+        likes_qub_query = (
+            JokeLikeStatus.objects.select_related('joke')
+            .filter(joke=OuterRef('pk'), is_liked=True)
+            .annotate(count=Func(F('id'), function='Count'))
+            .values('count')
+        )
+        return self.annotate(likes_annotated=Subquery(likes_qub_query))
 
 
 class Joke(CrmMixin, SlugifyMixin, ExportableMixin):
     SLUGIFY_FIELD = 'text'
     text = models.CharField(max_length=4096)
+
+    objects = JokeQuerySet.as_manager()
 
     class Meta:
         db_table = 'joke'
@@ -45,19 +60,61 @@ class Joke(CrmMixin, SlugifyMixin, ExportableMixin):
         data = [
             {
                 'text': item.text,
+                'slug': item.slug,
+                'is_active': item.is_active
             } for item in cls.objects.all()
         ]
         return data
 
     @classmethod
+    def clear_previous(cls):
+        cls.objects.all().archive()
+
+    @classmethod
     def validate_data(cls, data):
-        return all(cls.is_allowed_to_assign_slug(item['text']) for item in data)
+        if not data:
+            raise ValueError(_('No data to validate'))
+
+        slugs = [item.get('slug') for item in data if item.get('slug')]
+        if len(slugs) != len(set(slugs)):
+            raise ValueError(_('Please, provide non unique slugs'))
+
+        for item in data:
+            text = item.get('text')
+            if not text:
+                raise ValueError(_('Joke text is required'))
+
+            instance = cls.objects.filter(text=text).first()
+            if not cls.is_allowed_to_assign_slug(text, instance):
+                raise ValueError(_('Some jokes generate non unique slugs'))
+
+        return data
 
     @classmethod
     def import_data(cls, data):
         for item in data:
-            joke, created = Joke.objects.get_or_create(text=item['text'])
-            joke.assign_slug()
+            text = item.get('text')
+            slug = item.get('slug')
+            is_active = item.get('is_active')
+
+            if not slug:
+                joke, created = Joke.objects.get_or_create(text=text)
+                joke.assign_slug()
+            else:
+                joke = cls.objects.filter(slug=slug).first()
+                if joke:
+                    joke.text = text
+                    joke.save()
+                else:
+                    cls.objects.create(text=text, slug=slug)
+                    continue
+
+            if is_active is False:
+                joke.archive()
+            else:
+                joke.restore()
+
+        return cls.objects.all()
 
 
 class JokeSeen(models.Model):

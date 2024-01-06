@@ -8,15 +8,39 @@
   <a class="btn btn-info" type="button"
      href="{% host_url 'admin-jokes-add' host 'admin' %}">
     <i class="bx bx-plus me-1"></i> {% trans 'Add' %}</a>
-  <a class="btn btn-secondary" type="button"
-     href="{% host_url 'admin-jokes-export' host 'admin' %}">
-    <i class="bx bx-download me-1"></i> {% trans 'Export' %}</a>
-  <a class="btn btn-secondary" type="button"
-     href="{% host_url 'admin-jokes-import' host 'admin' %}">
-    <i class="bx bx-upload me-1"></i> {% trans 'import' %}</a>
+
+  <div class="btn-group">
+    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+      {% trans 'Extra actions' %}
+    </button>
+    <ul class="dropdown-menu" style="">
+      <li>
+        <a class="dropdown-item" href="{% host_url 'admin-jokes-export' host 'admin' %}">
+          {% trans 'Export' %}
+        </a>
+      </li>
+      <li>
+        <a class="dropdown-item" href="{% host_url 'admin-jokes-import' host 'admin' %}">
+          {% trans 'Import' %}
+        </a>
+      </li>
+      <li>
+        <hr class="dropdown-divider">
+      </li>
+      <li>
+        <a class="dropdown-item" href="{% host_url 'admin-jokes-default-fixture' host 'admin' %}">
+          {% trans 'View default fixture' %}
+        </a>
+      </li>
+      <li>
+        <a class="dropdown-item" href="{% host_url 'admin-jokes-load-default-fixture' host 'admin' %}">
+          {% trans 'Load default fixture' %}
+        </a>
+      </li>
+    </ul>
+  </div>
 {% endblock %}
 
 {% block content %}
-  {% include 'Admin/core/base_filter_form.html' with filter=table.filter %}
-  {% render_table table.body %}
+  {% include 'Admin/core/base_table.html' with table=table %}
 {% endblock %}
