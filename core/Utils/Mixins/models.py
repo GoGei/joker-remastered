@@ -156,8 +156,6 @@ class ExportableMixin(models.Model):
     @transaction.atomic
     def import_from_data(cls, data):
         cls.clear_previous()
-        is_valid = cls.validate_data(data)
-        if not is_valid:
-            raise Exception('Invalid data')
+        cls.validate_data(data)
         cls.import_data(data)
         return True

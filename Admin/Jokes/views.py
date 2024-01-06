@@ -1,14 +1,15 @@
 from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponse
-from django.db.models import Count, Q
+from django.db.models import OuterRef, Subquery, Func, F
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils.translation import gettext_lazy as _
 from django_hosts import reverse
 from rest_framework.renderers import JSONRenderer
 
-from core.Utils.Access.decorators import manager_required, superuser_required
-from core.Joke.models import Joke
-from .forms import JokeFilterForm, JokeAddForm, JokeEditForm
+from core.Utils.Access.decorators import manager_required
+from core.Joke.models import Joke, JokeLikeStatus
+from .forms import JokeFilterForm, JokeAddForm, JokeEditForm, JokeImportForm
 from .tables import JokesTable, JokesTopTable
 
 
@@ -36,14 +37,21 @@ def jokes_list(request):
 
 @manager_required
 def jokes_top_list(request):
-    jokes = Joke.objects.annotate(
-        likes=Count('jokelikestatus', filter=Q(jokelikestatus__is_liked=True))
-    ).order_by('-likes', 'slug').all()
+    jokes = (
+        Joke.objects.active()
+        .annotate_likes()
+        .exclude(likes_annotated__lte=0)
+        .order_by('-likes_annotated', 'slug')
+    )
     table_body = JokesTopTable(jokes)
 
     table = {
-        'title': 'Top jokes',
-        'body': table_body
+        'title': _('Top jokes'),
+        'body': table_body,
+        'on_empty': {
+            'title': _('No top jokes'),
+            'description': _('No jokes have positively rated yet'),
+        }
     }
 
     return render(request, 'Admin/Joke/joke_top_list.html',
@@ -130,5 +138,21 @@ def jokes_export(request):
 
 @manager_required
 def jokes_import(request):
-    messages.success(request, f'Jokes imported')
-    return redirect(reverse('admin-jokes-list', host='admin'))
+    if '_cancel' in request.POST:
+        return redirect(reverse('admin-jokes-list', host='admin'))
+
+    form_body = JokeImportForm(request.POST or None, request.FILES or None)
+    if form_body.is_valid():
+        try:
+            form_body.run()
+            messages.success(request, f'Jokes imported successfully')
+            return redirect(reverse('admin-jokes-list', host='admin'))
+        except Exception as e:
+            form_body.add_error(None, e)
+
+    form = {
+        'body': form_body,
+        'buttons': {'save': True, 'cancel': True},
+    }
+    return render(request, 'Admin/Joke/joke_import.html',
+                  {'form': form})
