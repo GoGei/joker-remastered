@@ -10,7 +10,7 @@ from core.Joke.models import Joke
 
 class JokeFilterForm(BaseFilterForm):
     class Meta(BaseFilterForm.Meta):
-        search_fields = ('text',)
+        search_fields = ('text', 'slug')
         model = Joke
 
 
@@ -56,10 +56,11 @@ class JokeImportForm(forms.Form):
             self.add_error('file', _('Only JSON files are allowed'))
         return file
 
-    def run(self):
+    def run(self, data=None):
         try:
-            data = self.cleaned_data.get('file').read().decode()
-            data = json.loads(data)
+            if not data:
+                data = self.cleaned_data.get('file').read().decode()
+                data = json.loads(data)
         except UnicodeDecodeError:
             raise forms.ValidationError(_('Only JSON files are allowed'))
         except json.decoder.JSONDecodeError:

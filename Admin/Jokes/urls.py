@@ -12,4 +12,7 @@ urlpatterns = [
 
     url(r'^export/$', views.jokes_export, name='admin-jokes-export'),
     url(r'^import/$', views.jokes_import, name='admin-jokes-import'),
+
+    url(r'^default-fixture/$', views.jokes_default_fixture, name='admin-jokes-default-fixture'),
+    url(r'^load-default-fixture/$', views.jokes_load_default_fixture, name='admin-jokes-load-default-fixture'),
 ]

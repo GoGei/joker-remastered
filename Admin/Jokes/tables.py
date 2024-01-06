@@ -5,6 +5,7 @@ from core.Joke.models import Joke
 
 class JokesTable(tables.Table):
     text_start = tables.TemplateColumn(template_name='Admin/Joke/joke_table_text_start_field.html', orderable=False)
+    slug = tables.TemplateColumn(template_name='Admin/Joke/joke_table_slug_start_field.html', orderable=False)
     is_active = tables.BooleanColumn(orderable=False)
     actions = tables.TemplateColumn(template_name='Admin/Joke/joke_table_actions_field.html', orderable=False)
 

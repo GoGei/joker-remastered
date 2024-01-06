@@ -61,6 +61,7 @@ class Joke(CrmMixin, SlugifyMixin, ExportableMixin):
             {
                 'text': item.text,
                 'slug': item.slug,
+                'is_active': item.is_active
             } for item in cls.objects.all()
         ]
         return data
@@ -94,20 +95,26 @@ class Joke(CrmMixin, SlugifyMixin, ExportableMixin):
         for item in data:
             text = item.get('text')
             slug = item.get('slug')
+            is_active = item.get('is_active')
 
             if not slug:
                 joke, created = Joke.objects.get_or_create(text=text)
                 joke.assign_slug()
-                joke.restore()
-                continue
-
-            joke = cls.objects.filter(slug=slug).first()
-            if joke:
-                joke.text = text
-                joke.save()
             else:
-                joke = cls.objects.create(text=text, slug=slug)
-            joke.restore()
+                joke = cls.objects.filter(slug=slug).first()
+                if joke:
+                    joke.text = text
+                    joke.save()
+                else:
+                    cls.objects.create(text=text, slug=slug)
+                    continue
+
+            if is_active is False:
+                joke.archive()
+            else:
+                joke.restore()
+
+        return cls.objects.all()
 
 
 class JokeSeen(models.Model):

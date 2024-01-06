@@ -1,14 +1,16 @@
+import json
+
 from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponse
-from django.db.models import OuterRef, Subquery, Func, F
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import gettext_lazy as _
 from django_hosts import reverse
 from rest_framework.renderers import JSONRenderer
 
 from core.Utils.Access.decorators import manager_required
-from core.Joke.models import Joke, JokeLikeStatus
+from core.Joke import constants
+from core.Joke.models import Joke
 from .forms import JokeFilterForm, JokeAddForm, JokeEditForm, JokeImportForm
 from .tables import JokesTable, JokesTopTable
 
@@ -67,7 +69,7 @@ def jokes_add(request):
 
     if form_body.is_valid():
         joke = form_body.save()
-        messages.success(request, f'Joke {joke.pk} added')
+        messages.success(request, _(f'Joke {joke.pk} added'))
         return redirect(reverse('admin-jokes-list', host='admin'))
 
     form = {
@@ -91,7 +93,7 @@ def jokes_edit(request, joke_pk):
     if form_body.is_valid():
         joke = form_body.save()
         joke.modify(request.user)
-        messages.success(request, f'Joke {joke.pk} edited')
+        messages.success(request, _(f'Joke {joke.pk} edited'))
         return redirect(reverse('admin-jokes-list', host='admin'))
 
     form = {
@@ -112,7 +114,7 @@ def jokes_view(request, joke_pk):
 def jokes_archive(request, joke_pk):
     joke = get_object_or_404(Joke, pk=joke_pk)
     joke.archive(request.user)
-    messages.success(request, f'Joke {joke.pk} archived')
+    messages.success(request, _(f'Joke {joke.pk} archived'))
     return redirect(reverse('admin-jokes-list', host='admin'))
 
 
@@ -120,7 +122,7 @@ def jokes_archive(request, joke_pk):
 def jokes_restore(request, joke_pk):
     joke = get_object_or_404(Joke, pk=joke_pk)
     joke.restore(request.user)
-    messages.success(request, f'Joke {joke.pk} restored')
+    messages.success(request, _(f'Joke {joke.pk} restored'))
     return redirect(reverse('admin-jokes-list', host='admin'))
 
 
@@ -145,7 +147,7 @@ def jokes_import(request):
     if form_body.is_valid():
         try:
             form_body.run()
-            messages.success(request, f'Jokes imported successfully')
+            messages.success(request, _('Jokes imported successfully'))
             return redirect(reverse('admin-jokes-list', host='admin'))
         except Exception as e:
             form_body.add_error(None, e)
@@ -156,3 +158,28 @@ def jokes_import(request):
     }
     return render(request, 'Admin/Joke/joke_import.html',
                   {'form': form})
+
+
+def _read_data():
+    filepath = constants.DEFAULT_FIXTURE
+    with open(filepath, 'r') as f:
+        return json.loads(f.read())
+
+
+@manager_required
+def jokes_default_fixture(request):
+    data = _read_data()
+    return render(request, 'Admin/Joke/joke_default_fixture.html', {'data': data})
+
+
+@manager_required
+def jokes_load_default_fixture(request):
+    try:
+        data = _read_data()
+        JokeImportForm().run(data)
+
+        messages.success(request, _('Jokes imported successfully'))
+        return redirect(reverse('admin-jokes-list', host='admin'))
+    except Exception as e:
+        messages.warning(request, _('Jokes not imported! Error: %s') % e)
+    return redirect(reverse('admin-jokes-default-fixture', host='admin'))
