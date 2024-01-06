@@ -1,0 +1,19 @@
+{% extends 'Admin/Logger/logger_base.html' %}
+{% load i18n static hosts django_tables2 %}
+
+{% block menu-settings-logger %} active {% endblock %}
+
+{% block pagetitle %}
+  {% trans 'Activity log' %}
+{% endblock %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  <li class="breadcrumb-item" aria-current="page">
+    <a href="{% host_url 'admin-logger-list' host 'admin' %}">{% trans 'Logger' %}</a>
+  </li>
+{% endblock %}
+
+{% block content %}
+  {% include 'Admin/core/base_table.html' with table=table %}
+{% endblock %}

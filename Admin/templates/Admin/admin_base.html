@@ -138,23 +138,28 @@
           </a>
         </li>
 
-        {% comment %}<li class="menu-item {% block menu-settings %} open {% endblock %}">
+        <li class="menu-header small text-uppercase">
+          <span class="menu-header-text">{% trans 'Pages' %}</span>
+        </li>
+
+        <li class="menu-item {% block menu-settings %}{% endblock %}">
           <a href="#" class="menu-link menu-toggle">
             <i class="menu-icon tf-icons bx bx-layout"></i>
             <div data-i18n="Settings">{% trans 'Settings' %}</div>
           </a>
 
           <ul class="menu-sub">
-            <li class="menu-item {% block menu-settings-menu-item1 %} active {% endblock %}">
-              <a href="#" class="menu-link">
-                <div data-i18n="menu-item1">{% trans 'menu-item1' %}</div>
+            <li class="menu-item {% block menu-settings-logger-objects %}{% endblock %}">
+              <a href="{% host_url 'admin-logger-objects-list' host 'admin' %}" class="menu-link">
+                <div data-i18n="logger objects">{% trans 'Objects logger' %}</div>
+              </a>
+            </li>
+            <li class="menu-item {% block menu-settings-logger %}{% endblock %}">
+              <a href="{% host_url 'admin-logger-list' host 'admin' %}" class="menu-link">
+                <div data-i18n="logger">{% trans 'Logger' %}</div>
               </a>
             </li>
           </ul>
-        </li>{% endcomment %}
-
-        <li class="menu-header small text-uppercase">
-          <span class="menu-header-text">{% trans 'Pages' %}</span>
         </li>
       </ul>
     </aside>

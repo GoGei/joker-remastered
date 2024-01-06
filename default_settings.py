@@ -1,4 +1,5 @@
 import os
+from mongoengine import register_connection
 
 BASE_DIR = os.path.normpath(os.path.join(os.path.dirname(__file__))) + '/'
 
@@ -200,3 +201,9 @@ CELERY_QUEUES = {
 }
 
 ITEMS_PER_PAGE = 20
+
+MONGODB_LOGGER_ALIAS = 'logger'
+MONGODB_LOGGER_COLLECTION = 'log'
+register_connection(alias=MONGODB_LOGGER_ALIAS,
+                    host='mongodb://127.0.0.1:27017/joker_remastered_logger',
+                    w=0)

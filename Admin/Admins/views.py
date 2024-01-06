@@ -9,6 +9,8 @@ from core.User.models import User
 from .forms import AdminsFilterForm, AdminAddForm, AdminEditForm, AdminSetPasswordForm
 from .tables import AdminTable
 
+from core.Utils.logger import log
+
 
 def get_base_qs():
     return User.objects.managers().order_by('email')
@@ -49,7 +51,11 @@ def admins_add(request):
 
     if form_body.is_valid():
         admin = form_body.save()
-        messages.success(request, _(f'Admin {admin.label} added'))
+        msg = _(f'Admin {admin.label} added')
+        messages.success(request, msg)
+        log.object('admin_add', msg,
+                   instance=admin,
+                   user=request.user)
         return redirect(reverse('admin-admins-set-password', args=[admin.id], host='admin'))
 
     form = {
@@ -72,7 +78,11 @@ def admins_edit(request, admin_pk):
 
     if form_body.is_valid():
         admin = form_body.save()
-        messages.success(request, _(f'Admin {admin.label} edited'))
+        msg = _(f'Admin {admin.label} edited')
+        messages.success(request, msg)
+        log.object('admin_edit', msg,
+                   instance=admin,
+                   user=request.user)
         return redirect(reverse('admin-admins-view', args=[admin.id], host='admin'))
 
     form = {
@@ -89,7 +99,12 @@ def admins_deactivate(request, admin_pk):
     admin = get_object_or_404(get_base_qs(), pk=admin_pk)
     admin.is_active = False
     admin.save()
-    messages.success(request, _(f'Admin {admin.label} deactivated'))
+
+    msg = _(f'Admin {admin.label} deactivated')
+    messages.success(request, msg)
+    log.object('admin_deactivate', msg,
+               instance=admin,
+               user=request.user)
     return redirect(reverse('admin-admins-list', host='admin'))
 
 
@@ -98,7 +113,12 @@ def admins_activate(request, admin_pk):
     admin = get_object_or_404(get_base_qs(), pk=admin_pk)
     admin.is_active = True
     admin.save()
-    messages.success(request, _(f'Admin {admin.label} activated'))
+
+    msg = _(f'Admin {admin.label} activated')
+    messages.success(request, msg)
+    log.object('admin_activate', msg,
+               instance=admin,
+               user=request.user)
     return redirect(reverse('admin-admins-list', host='admin'))
 
 
@@ -112,7 +132,12 @@ def admins_set_password(request, admin_pk):
 
     if form_body.is_valid():
         admin = form_body.save()
-        messages.success(request, _(f'Admin {admin.label} set password'))
+
+        msg = _(f'Admin {admin.label} set password')
+        messages.success(request, msg)
+        log.object('admin_set_password', msg,
+                   instance=admin,
+                   user=request.user)
         return redirect(reverse('admin-admins-view', args=[admin.id], host='admin'))
 
     form = {
