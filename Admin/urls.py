@@ -8,4 +8,5 @@ urlpatterns = [
     url('^admins/', include('Admin.Admins.urls')),
     url('^users/', include('Admin.Users.urls')),
     url('^jokes/', include('Admin.Jokes.urls')),
+    url('^profile/', include('Admin.Profile.urls')),
 ]

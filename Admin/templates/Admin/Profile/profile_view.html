@@ -1,0 +1,60 @@
+{% extends 'Admin/Profile/profile_base.html' %}
+{% load i18n static hosts %}
+
+{% block pagetitle %}
+  {% trans 'Profile view' %}
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col">
+      <div class="card mb-4">
+        <h5 class="card-header">{% trans 'Profile card' %}</h5>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-4">{% trans 'Email' %}</div>
+            <div class="col-8"><a href="mailto:{{ profile.email }}">{{ profile.email }}</a></div>
+          </div>
+          <div class="row">
+            <div class="col-4">{% trans 'First name' %}</div>
+            <div class="col-8">{{ profile.first_name|default:'' }}</div>
+          </div>
+          <div class="row">
+            <div class="col-4">{% trans 'Last name' %}</div>
+            <div class="col-8">{{ profile.last_name|default:'' }}</div>
+          </div>
+          <div class="row">
+            <div class="col-4">{% trans 'Is active' %}</div>
+            <div class="col-8">
+              {% if profile.is_active %}
+                {% trans 'Active' %}
+              {% else %}
+                {% trans 'Not active' %}
+              {% endif %}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4">{% trans 'Is staff' %}</div>
+            <div class="col-8">
+              {% if profile.is_staff %}
+                {% trans 'Staff' %}
+              {% else %}
+                {% trans 'Not staff' %}
+              {% endif %}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4">{% trans 'Is superuser' %}</div>
+            <div class="col-8">
+              {% if profile.is_superuser %}
+                {% trans 'Superuser' %}
+              {% else %}
+                {% trans 'Not superuser' %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
