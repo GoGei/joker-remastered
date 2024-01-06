@@ -1,8 +1,5 @@
 Admin:
 Jokes liked by User
-My profile (change fname, lname)
-Settings -> Change password
-Remove profile photo
 Forget password (send email)
 Add logger
 

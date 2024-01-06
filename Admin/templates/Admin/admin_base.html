@@ -190,15 +190,18 @@
             <li class="nav-item navbar-dropdown dropdown-user dropdown">
               <a class="nav-link dropdown-toggle hide-arrow" href="#" data-bs-toggle="dropdown">
                 <div class="avatar">
-                  <img src="{% static "sneat/assets/img/avatars/default.png" %}" alt class="w-px-40 h-auto rounded-circle"/>
+                  <img src="{% static "sneat/assets/img/avatars/default.png" %}" alt
+                       class="w-px-40 h-auto rounded-circle"/>
                 </div>
               </a>
               <ul class="dropdown-menu dropdown-menu-end">
                 <li>
                   <div class="dropdown-item">
                     <div class="flex-grow-1">
-                      <span class="fw-semibold d-block">{{ request.user.label }}</span>
-                      <small class="text-muted">{{ request.user.role_label }}</small>
+                      <a href="{% host_url 'admin-profile-view' host 'admin' %}">
+                        <span class="fw-semibold d-block">{{ request.user.label }}</span>
+                        <small class="text-muted">{{ request.user.role_label }}</small>
+                      </a>
                     </div>
                   </div>
                 </li>
@@ -206,15 +209,15 @@
                   <div class="dropdown-divider"></div>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="#">
+                  <a class="dropdown-item" href="{% host_url 'admin-profile-edit' host 'admin' %}">
                     <i class="bx bx-user me-2"></i>
-                    <span class="align-middle">{% trans 'My Profile' %}</span>
+                    <span class="align-middle">{% trans 'Change profile' %}</span>
                   </a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="#">
-                    <i class="bx bx-cog me-2"></i>
-                    <span class="align-middle">{% trans 'Settings' %}</span>
+                  <a class="dropdown-item" href="{% host_url 'admin-profile-change-password' host 'admin' %}">
+                    <i class="bx bx-key me-2"></i>
+                    <span class="align-middle">{% trans 'Change password' %}</span>
                   </a>
                 </li>
                 <li>
