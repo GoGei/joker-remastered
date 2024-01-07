@@ -1,7 +1,6 @@
 Admin:
 Jokes liked by User
 Forget password (send email)
-Add logger tables
 
 Settings pages:
 * Redis

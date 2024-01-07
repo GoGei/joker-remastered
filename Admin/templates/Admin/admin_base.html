@@ -142,19 +142,19 @@
           <span class="menu-header-text">{% trans 'Pages' %}</span>
         </li>
 
-        <li class="menu-item {% block menu-settings %}{% endblock %}">
+        <li class="menu-item {% block menu-logger %}{% endblock %}">
           <a href="#" class="menu-link menu-toggle">
-            <i class="menu-icon tf-icons bx bx-layout"></i>
-            <div data-i18n="Settings">{% trans 'Settings' %}</div>
+            <i class="menu-icon tf-icons bx bx-book"></i>
+            <div data-i18n="Logger">{% trans 'Logger' %}</div>
           </a>
 
           <ul class="menu-sub">
-            <li class="menu-item {% block menu-settings-logger-objects %}{% endblock %}">
+            <li class="menu-item {% block menu-logger-objects %}{% endblock %}">
               <a href="{% host_url 'admin-logger-objects-list' host 'admin' %}" class="menu-link">
                 <div data-i18n="logger objects">{% trans 'Objects logger' %}</div>
               </a>
             </li>
-            <li class="menu-item {% block menu-settings-logger %}{% endblock %}">
+            <li class="menu-item {% block menu-logger-common %}{% endblock %}">
               <a href="{% host_url 'admin-logger-list' host 'admin' %}" class="menu-link">
                 <div data-i18n="logger">{% trans 'Logger' %}</div>
               </a>

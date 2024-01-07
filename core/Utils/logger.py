@@ -7,13 +7,13 @@ from mongoengine import connection, StringField, DateTimeField, DynamicDocument
 
 
 class LevelChoices(TextChoices):
-    DEBUG = 'debug', _('Debug')
-    INFO = 'info', _('Info')
-    SUCCESS = 'success', _('Success')
-    WARNING = 'warning', _('Warning')
-    ERROR = 'error', _('Error')
-    CRITICAL = 'critical', _('Critical')
-    OBJECT = 'object', _('Object')
+    DEBUG = 'DEBUG', _('Debug')
+    INFO = 'INFO', _('Info')
+    SUCCESS = 'SUCCESS', _('Success')
+    WARNING = 'WARNING', _('Warning')
+    ERROR = 'ERROR', _('Error')
+    CRITICAL = 'CRITICAL', _('Critical')
+    OBJECT = 'OBJECT', _('Object')
 
 
 class Log(object):
@@ -37,9 +37,10 @@ class Log(object):
     def localstamp(self):
         return timezone.get_current_timezone().normalize(self.utcstamp)
 
+    @property
     def data(self):
-        fields = ('key', 'stamp', 'level', 'description')
-        return filter(lambda x: x[1] not in fields, self._data.items())
+        fields = ('key', 'stamp', 'level', 'description', 'id')
+        return {field: value for field, value in self._data.items() if field not in fields}
 
 
 class Logger(object):
@@ -105,7 +106,7 @@ class ActivityLog(Log, DynamicDocument):
         return self.description
 
 
-def log_qs_to_dict(qs: ActivityLog.objects, fields: tuple = ('key', 'level', 'stamp', 'description')):
+def log_qs_to_list(qs: ActivityLog.objects, fields: tuple = ('key', 'level', 'stamp', 'description')):
     return [
         {
             key: getattr(item, key) for key in fields
