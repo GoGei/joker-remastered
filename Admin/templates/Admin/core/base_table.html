@@ -1,14 +1,15 @@
 {% load i18n static django_tables2 %}
 
-{% if table.filter %}
-  {% include 'Admin/core/base_filter_form.html' with filter=table.filter %}
-{% endif %}
+
 
 {% if table.body.paginated_rows %}
+  {% include 'Admin/core/base_filter_form.html' with filter=table.filter %}
   {% render_table table.body %}
 {% else %}
   {% with table.on_empty as empty_data %}
     {% if request.GET %}
+      {% include 'Admin/core/base_filter_form.html' with filter=table.filter %}
+
       <div class="container-xxl container-p-y">
         <div class="misc-wrapper text-center">
           <h2 class="mb-2 mx-2">
