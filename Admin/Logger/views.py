@@ -2,7 +2,9 @@ from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
 from django_hosts import reverse
 
-from core.Utils.logger import ActivityLog, LevelChoices, log_qs_to_list
+from core.Utils.Logger.models import ActivityLog
+from core.Utils.Logger.enums import LevelChoices
+from core.Utils.Logger.services import log_qs_to_list
 from core.Utils.Access.decorators import manager_required
 from .forms import LoggerFilterForm
 from .tables import LoggerTable, LoggerObjectTable
