@@ -9,7 +9,7 @@ from core.User.models import User
 from .forms import AdminsFilterForm, AdminAddForm, AdminEditForm, AdminSetPasswordForm
 from .tables import AdminTable
 
-from core.Utils.logger import log
+from core.Utils.Logger.logger import log
 
 
 def get_base_qs():

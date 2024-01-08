@@ -14,7 +14,7 @@ from core.Joke.models import Joke
 from .forms import JokeFilterForm, JokeAddForm, JokeEditForm, JokeImportForm
 from .tables import JokesTable, JokesTopTable
 
-from core.Utils.logger import log
+from core.Utils.Logger.logger import log
 
 
 @manager_required

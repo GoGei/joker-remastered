@@ -2,7 +2,5 @@ Admin:
 Jokes liked by User
 Forget password (send email)
 
-Make logger as separate Utils
-
 Settings pages:
 * Redis
