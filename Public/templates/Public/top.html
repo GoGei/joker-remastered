@@ -1,0 +1,14 @@
+{% extends 'Public/base.html' %}
+{% load static i18n %}
+
+{% block content %}
+  {% if 'qweqw' %}
+    <section class="module" id="about">
+      {% for joke in 'qweqweqwewqeqweqwewq' %}
+        {% include 'Public/joke_card.html' with joke=joke %}
+      {% endfor %}
+    </section>
+  {% else %}
+    {% include 'Public/empty_page.html' %}
+  {% endif %}
+{% endblock %}

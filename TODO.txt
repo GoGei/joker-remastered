@@ -4,3 +4,10 @@ Forget password (send email)
 
 Settings pages:
 * Redis
+
+Public:
+- Home: get joke on click
+- Login
+- Top jokes
+- * My liked jokes
+- * My seen jokes
