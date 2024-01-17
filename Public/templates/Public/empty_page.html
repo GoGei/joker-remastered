@@ -1,16 +1,18 @@
-{% load static %}
+{% load i18n static hosts %}
+
 <section class="home-section home-fade home-full-height bg-dark-60 landing-header" id="home"
-         data-background="{% static 'titan/images/landing/landing_bg.jpg' %}"
-         style="height: 959px; background-image: url({% static 'titan/images/landing/landing_bg.jpg' %});">
+         data-background="{% static 'images/put_on_a_happy_face.png' %}"
+         style="height: 959px; background-image: url({% static 'images/put_on_a_happy_face.png' %});">
   <div class="titan-caption">
     <div class="caption-content" style="opacity: 1;">
       <div class="container">
-        <div class="font-alt mb-30 titan-title-size-4">Landing Page</div>
-        <div class="font-alt">Create a stylish App Landing Page<br>And highlight all the great things of your
-          product!
+        <div class="font-alt mb-30 titan-title-size-4">{% trans 'Page is empty' %}</div>
+        <div class="font-alt">{% trans 'Dont worry, there are still plenty of jokes!' %}<br>
+          {% trans 'Put on a happy face!' %}
         </div>
-        <div class="font-alt mt-30"><a class="btn btn-border-w btn-circle" href="#"><i class="icon-download"></i>
-          Download App</a></div>
+        <div class="font-alt mt-30">
+          <a class="btn btn-border-w btn-circle" href="{% host_url 'home-index' host 'public' %}">
+            <i class="icon-happy"></i> {% trans 'Go back' %}</a></div>
       </div>
     </div>
   </div>

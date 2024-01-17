@@ -4,9 +4,11 @@
 {% block content %}
   {% if jokes %}
     <section class="module" id="about">
-      {% for joke in jokes %}
-        {% include 'Public/joke_card.html' with joke=joke %}
-      {% endfor %}
+      <div class="container">
+        {% for joke in jokes %}
+          {% include 'Public/joke_card.html' with joke=joke counter=forloop.counter %}
+        {% endfor %}
+      </div>
     </section>
   {% else %}
     {% include 'Public/empty_page.html' %}
