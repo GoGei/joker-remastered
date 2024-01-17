@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from core.Joke.models import Joke
 
 
 def home_index(request):
@@ -6,6 +7,8 @@ def home_index(request):
 
 
 def home_top(request):
+    # jokes = Joke.objects.active().annotate_likes().order_by('likes_annotated', 'slug')
+    # return render(request, 'Public/top.html', {'jokes': jokes})
     return render(request, 'Public/top.html')
 
 

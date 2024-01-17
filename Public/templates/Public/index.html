@@ -3,12 +3,11 @@
 
 {% block content %}
   <section class="home-section home-parallax home-fade home-full-height bg-dark-30" id="home"
-           data-background="{% static 'titan/images/section-1.jpg' %}">
+           data-background="{% static 'images/img_1.png' %}">
     <div class="titan-caption">
       <div class="caption-content">
-        <div class="font-alt mb-30 titan-title-size-1">Hello &amp; welcome</div>
-        <div class="font-alt mb-40 titan-title-size-4">We are Titan</div>
-        <a class="btn btn-border-w btn-round" href="#">Learn More</a>
+        <div class="font-alt mb-40 titan-title-size-4">{% trans 'Put on a happy face' %}</div>
+        <a class="btn btn-border-w btn-round" href="#">{% trans 'Get a joke' %}</a>
       </div>
     </div>
   </section>

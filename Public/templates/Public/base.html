@@ -59,7 +59,8 @@
   {% endblock %}
 </head>
 <body data-spy="scroll" data-target=".onpage-navigation" data-offset="60">
-<main>
+<main id="main-container"
+      data-empty-page-api-url="{{ EMPTY_PAGE_API_URL }}">
   <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
     <div class="container">
       <div class="navbar-header">
@@ -104,6 +105,8 @@ JavaScripts
 <script src="{% static 'titan/lib/simple-text-rotator/jquery.simple-text-rotator.min.js' %}"></script>
 <script src="{% static 'titan/js/plugins.js' %}"></script>
 <script src="{% static 'titan/js/main.js' %}"></script>
+
+<script src="{% static 'js/public/main.js' %}"></script>
 
 {% block extrajs %}
 {% endblock %}

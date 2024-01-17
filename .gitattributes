@@ -1,4 +1,5 @@
 htdocs/css/** linguist-vendored
 htdocs/js/** linguist-vendored
 htdocs/sneat/** linguist-vendored
+htdocs/titan/** linguist-vendored
 htdocs/images/** linguist-vendored
