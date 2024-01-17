@@ -3,7 +3,7 @@
 
 {% block content %}
   {% if jokes %}
-    <section class="module" id="about">
+    <section class="module" id="top-jokes">
       <div class="container">
         {% for joke in jokes %}
           {% include 'Public/joke_card.html' with joke=joke counter=forloop.counter %}
@@ -14,3 +14,13 @@
     {% include 'Public/empty_page.html' %}
   {% endif %}
 {% endblock %}
+
+{% comment %}
+{% block content %}
+  <div id="top-jokes-div">
+  </div>
+{% endblock %}
+
+{% block extrajs %}
+  <script src="{% static 'js/public/top-jokes.js' %}"></script>
+{% endblock %}{% endcomment %}
