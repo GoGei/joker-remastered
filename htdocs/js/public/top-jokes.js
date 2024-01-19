@@ -1,38 +1,86 @@
+TopJokes = {};
+
+(function (obj, $) {
+    function init() {
+        if (!obj.apiURL) {
+            loadEmptyPage();
+            obj.load_more_jokes = false;
+            return;
+        }
+
+        obj.loadJokes(true);
+    }
+
+    function loadEmptyPage() {
+        getEmptyPage().done(function (emptyPageHTML) {
+            obj.$mainDiv.html(emptyPageHTML);
+        });
+    }
+
+    function loadJokes(on_init = false) {
+        if (!obj.load_more_jokes) {
+            return;
+        }
+
+        let url = obj.apiURL;
+        let baseURL = obj.$mainDiv.data('jokes-url');
+        $.ajax({
+            url: url,
+            method: 'GET',
+            data: {
+                limit: obj.page_size,
+            },
+        }).done(function (data) {
+            let results = data?.results;
+
+            if ($.isEmptyObject(results) && on_init) {
+                obj.load_more_jokes = false;
+                loadEmptyPage();
+                return;
+            }
+
+            let queryString = $.map(results, function (item) {
+                return "jokes=" + item.id;
+            }).join('&');
+            $.ajax({
+                url: baseURL + `render-items/?${queryString}`,
+                method: 'GET',
+                data: {
+                    format: 'html'
+                },
+            }).done(jokeHTML => {
+                obj.$container.append(jokeHTML);
+            });
+
+
+            obj.apiURL = data?.next;
+
+            if (!obj.apiURL) {
+                obj.load_more_jokes = false;
+            }
+        }).fail(function (e) {
+            console.log(e)
+        });
+    }
+
+    obj.init = init;
+    obj.loadEmptyPage = loadEmptyPage;
+    obj.loadJokes = loadJokes;
+    obj.page_size = 15;
+    obj.load_more_jokes = true;
+    obj.$mainDiv = $('#top-jokes-div');
+    obj.apiURL = obj.$mainDiv.data('jokes-url');
+    obj.$container = obj.$mainDiv.find('.container');
+
+})(TopJokes, jQuery);
+
 $(document).ready(function () {
-    let $container = $('#top-jokes-div');
+    console.log('top-jokes.js loaded');
+    TopJokes.init();
 
-
-
-    getEmptyPage().done(function (emptyPageHTML) {
-        let $html = emptyPageHTML;
-        if ($html) {
-            $container.html($html);
+    $(window).scroll(function () {
+        if ($(window).scrollTop() + $(window).height() === $(document).height()) {
+            TopJokes.loadJokes();
         }
     });
-
-
-    // $(window).scroll(function () {
-    //     if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
-    //         // let apiURL = $container.data('api-url');
-    //         // if (apiURL) {
-    //         //     loadMoreItems(apiURL);
-    //         // } else {
-    //             let $emptyPageHTML = getEmptyPage();
-    //             if ($emptyPageHTML) {
-    //                 $container.html($emptyPageHTML);
-    //             }
-    //         // }
-    //     }
-    // });
 });
-
-function loadMoreItems(apiURL) {
-    $.ajax({
-        url: apiURL,
-        method: 'GET',
-        success: function (data) {
-            // Append the new items to the item-list
-            $('#item-list').append(data);
-        }
-    });
-}

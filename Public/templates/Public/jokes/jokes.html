@@ -1,0 +1,7 @@
+<section class="module">
+  <div class="container">
+    {% for joke in jokes %}
+      {% include 'Public/jokes/joke_card.html' with joke=joke counter=forloop.counter %}
+    {% endfor %}
+  </div>
+</section>
