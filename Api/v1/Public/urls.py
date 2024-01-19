@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
-from .views import empty_page
+from . import views
 
 urlpatterns = [
-    url(r'^empty-page/$', empty_page, name='empty-page'),
+    url(r'^empty-page/$', views.empty_page, name='empty-page'),
 ]

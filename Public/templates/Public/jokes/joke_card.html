@@ -1,0 +1,8 @@
+{% load i18n %}
+
+<div class="row">
+  <h2 class="module-title font-alt">{% trans 'Joke' %} {% if counter %}#{{ counter }}{% endif %}</h2>
+  <div class="module-subtitle large-text">
+    {{ joke.text|safe|escape }}
+  </div>
+</div>

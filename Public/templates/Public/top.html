@@ -1,26 +1,24 @@
 {% extends 'Public/base.html' %}
-{% load static i18n %}
+{% load static %}
 
-{% block content %}
+{% comment %}{% block content %}
   {% if jokes %}
-    <section class="module" id="top-jokes">
-      <div class="container">
-        {% for joke in jokes %}
-          {% include 'Public/joke_card.html' with joke=joke counter=forloop.counter %}
-        {% endfor %}
-      </div>
-    </section>
+    {% include 'Public/jokes/jokes.html' %}
   {% else %}
     {% include 'Public/empty_page.html' %}
   {% endif %}
-{% endblock %}
+{% endblock %}{% endcomment %}
 
-{% comment %}
 {% block content %}
-  <div id="top-jokes-div">
+  <div id="top-jokes-div" data-jokes-url="{{ jokes_url }}">
+    <section class="module">
+      <div class="container">
+      </div>
+    </section>
   </div>
 {% endblock %}
 
 {% block extrajs %}
   <script src="{% static 'js/public/top-jokes.js' %}"></script>
-{% endblock %}{% endcomment %}
+{% endblock %}
+

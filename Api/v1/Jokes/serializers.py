@@ -9,3 +9,11 @@ class JokeSerializer(serializers.ModelSerializer):
             'id',
             'text',
         )
+
+
+class LikedJokesSerializer(JokeSerializer):
+    likes = serializers.IntegerField(source='likes_annotated', read_only=True)
+
+    class Meta(JokeSerializer.Meta):
+        model = Joke
+        fields = JokeSerializer.Meta.fields + ('likes',)
