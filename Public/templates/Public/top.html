@@ -1,14 +1,6 @@
 {% extends 'Public/base.html' %}
 {% load static %}
 
-{% comment %}{% block content %}
-  {% if jokes %}
-    {% include 'Public/jokes/jokes.html' %}
-  {% else %}
-    {% include 'Public/empty_page.html' %}
-  {% endif %}
-{% endblock %}{% endcomment %}
-
 {% block content %}
   <div id="top-jokes-div" data-jokes-url="{{ jokes_url }}">
     <section class="module">

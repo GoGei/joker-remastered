@@ -6,6 +6,7 @@ Settings pages:
 * Redis
 
 Public:
+- User activation via emails
 - Home: get joke on click
 - Login
 - Top jokes

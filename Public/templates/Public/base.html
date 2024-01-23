@@ -61,7 +61,7 @@
 <body data-spy="scroll" data-target=".onpage-navigation" data-offset="60">
 <main id="main-container"
       data-empty-page-api-url="{{ EMPTY_PAGE_API_URL }}">
-  <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
+  <nav class="navbar navbar-custom navbar-fixed-top" role="navigation" id="header-navbar">
     <div class="container">
       <div class="navbar-header">
         <a class="navbar-brand" href="#">{% trans 'Joker' %}</a>
@@ -77,9 +77,18 @@
           <li>
             <a href="{% host_url 'home-top' host 'public' %}">{% trans 'Top' %}</a>
           </li>
-          <li>
-            <a href="{% host_url 'home-account' host 'public' %}">{% trans 'Account' %}</a>
-          </li>
+          {% if request.user.is_authenticated %}
+{#            <li>#}
+{#              <a href="{% host_url 'home-account' host 'public' %}">{% trans 'Account' %}</a>#}
+{#            </li>#}
+            <li>
+              <a href="{% host_url 'home-logout' host 'public' %}">{% trans 'Logout' %}</a>
+            </li>
+          {% else %}
+            <li>
+              <a href="{% host_url 'home-login' host 'public' %}">{% trans 'Login' %}</a>
+            </li>
+          {% endif %}
         </ul>
       </div>
     </div>
