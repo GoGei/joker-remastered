@@ -6,8 +6,6 @@ Settings pages:
 * Redis
 
 Public:
-- Home: get joke on click
-- Login
-- Top jokes
-- * My liked jokes
-- * My seen jokes
+- User activation via emails
+- Home: render joke on click
+- Add seen jokes

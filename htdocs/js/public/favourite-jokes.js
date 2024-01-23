@@ -1,4 +1,4 @@
-TopJokes = {};
+FavouriteJokes = {};
 
 (function (obj, $) {
     function init() {
@@ -69,19 +69,19 @@ TopJokes = {};
     obj.loadJokes = loadJokes;
     obj.page_size = 15;
     obj.load_more_jokes = true;
-    obj.$mainDiv = $('#top-jokes-div');
+    obj.$mainDiv = $('#favourite-jokes-div');
     obj.apiURL = obj.$mainDiv.data('jokes-url');
     obj.$container = obj.$mainDiv.find('.container');
 
-})(TopJokes, jQuery);
+})(FavouriteJokes, jQuery);
 
 $(document).ready(function () {
-    console.log('top-jokes.js loaded');
-    TopJokes.init();
+    console.log('favourite-jokes.js loaded');
+    FavouriteJokes.init();
 
     $(window).scroll(function () {
         if ($(window).scrollTop() + $(window).height() === $(document).height()) {
-            TopJokes.loadJokes();
+            FavouriteJokes.loadJokes();
         }
     });
 });

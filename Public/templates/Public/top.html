@@ -1,20 +1,13 @@
 {% extends 'Public/base.html' %}
 {% load static %}
 
-{% comment %}{% block content %}
-  {% if jokes %}
-    {% include 'Public/jokes/jokes.html' %}
-  {% else %}
-    {% include 'Public/empty_page.html' %}
-  {% endif %}
-{% endblock %}{% endcomment %}
-
 {% block content %}
   <div id="top-jokes-div" data-jokes-url="{{ jokes_url }}">
     <section class="module">
       <div class="container">
       </div>
     </section>
+    <div class="scroll-up"><a href="#"><i class="fa fa-angle-double-up"></i></a></div>
   </div>
 {% endblock %}
 

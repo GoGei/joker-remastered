@@ -1,0 +1,54 @@
+{% extends 'Public/base.html' %}
+{% load static i18n %}
+
+{% block content %}
+  <section class="module bg-dark-30" data-background="{% static 'titan/images/section-4.jpg' %}"
+           style="background-image: url({% static 'titan/images/section-4.jpg' %});">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+          <h1 class="module-title font-alt mb-0">{% trans 'Register' %}</h1>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="module">
+    <div class="container">
+      <div class="row">
+        <div class="h-100 d-flex justify-content-center align-items-center col col-lg-6">
+          <h4 class="font-alt">{% trans 'Register' %}</h4>
+          <hr class="divider-w mb-10">
+          <form class="form" action="" method="POST">
+            {% csrf_token %}
+            {% include 'base_non_field_error_block.html' with form=form %}
+
+            <div class="form-group">
+              <input type="text" class="form-control" id="email" name="email"
+                     value="{{ form.email.value|default:'' }}"
+                     placeholder="{% trans 'Enter your email' %}"
+                     autofocus="">
+
+              {% include 'base_field_error_block.html' with field=form.email %}
+            </div>
+            <div class="form-group">
+              <input type="password" id="password" class="form-control" name="password"
+                     placeholder="{% trans 'Password' %}"
+                     aria-describedby="password">
+              {% include 'base_field_error_block.html' with field=form.password %}
+            </div>
+            <div class="form-group">
+              <input type="password" id="repeat_password" class="form-control" name="repeat_password"
+                     placeholder="{% trans 'Repeat password' %}"
+                     aria-describedby="repeat_password">
+              {% include 'base_field_error_block.html' with field=form.repeat_password %}
+            </div>
+            <div class="form-group">
+              <button class="btn btn-round btn-b">{% trans 'Register' %}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

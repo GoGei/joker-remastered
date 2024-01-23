@@ -2,9 +2,15 @@
 {% load static i18n %}
 
 {% block content %}
-  {% if jokes %}
-    {% include 'Public/jokes/jokes.html' %}
-  {% else %}
-    {% include 'Public/empty_page.html' %}
-  {% endif %}
+  <div id="favourite-jokes-div" data-jokes-url="{{ jokes_url }}">
+    <section class="module">
+      <div class="container">
+      </div>
+    </section>
+    <div class="scroll-up"><a href="#"><i class="fa fa-angle-double-up"></i></a></div>
+  </div>
+{% endblock %}
+
+{% block extrajs %}
+  <script src="{% static 'js/public/favourite-jokes.js' %}"></script>
 {% endblock %}
