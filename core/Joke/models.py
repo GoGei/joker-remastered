@@ -1,7 +1,7 @@
 from typing import List, Dict
 
 from django.db import models
-from django.db.models import OuterRef, Subquery, Func, F
+from django.db.models import OuterRef, Subquery, Func, F, Q
 from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -19,10 +19,18 @@ class JokeQuerySet(ActiveQuerySet):
         )
         return self.annotate(likes_annotated=Subquery(likes_qub_query))
 
-    def seen_by_user(self, user):
+    def __get_seen_joke_ids(self, user):
         jokes_seen_by_user = JokeSeen.objects.filter(user=user).order_by('-seen_stamp')
         joke_ids = jokes_seen_by_user.values_list('joke_id', flat=True)
-        return self.filter(id__in=joke_ids).order_by(F('id').desc())
+        return joke_ids
+
+    def seen_by_user(self, user):
+        ids = self.__get_seen_joke_ids(user)
+        return self.filter(id__in=ids)
+
+    def not_seen_by_user(self, user):
+        ids = self.__get_seen_joke_ids(user)
+        return self.filter(~Q(id__in=ids))
 
 
 class Joke(CrmMixin, SlugifyMixin, ExportableMixin):
@@ -60,7 +68,7 @@ class Joke(CrmMixin, SlugifyMixin, ExportableMixin):
         return self
 
     def make_seen(self, user):
-        JokeSeen.objects.create(joke=self, user=user)
+        JokeSeen.objects.get_or_create(joke=self, user=user)
         return self
 
     @classmethod

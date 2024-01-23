@@ -7,8 +7,5 @@ Settings pages:
 
 Public:
 - User activation via emails
-- Home: get joke on click
-- Login
-- Top jokes
-- * My liked jokes
-- * My seen jokes
+- Home: render joke on click
+- Add seen jokes

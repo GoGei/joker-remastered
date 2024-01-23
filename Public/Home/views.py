@@ -5,7 +5,8 @@ from core.Joke.models import Joke
 
 
 def home_index(request):
-    return render(request, 'Public/index.html')
+    joke_url = reverse('api-v1:jokes-daily-joke', host='api')
+    return render(request, 'Public/index.html', {'joke_url': joke_url})
 
 
 def home_top(request):

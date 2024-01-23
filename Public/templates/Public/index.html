@@ -6,10 +6,16 @@
            data-background="{% static 'images/img_1.png' %}">
     <div class="titan-caption">
       <div class="caption-content">
-        <div class="font-alt mb-40 titan-title-size-4">{% trans 'Put on a happy face' %}</div>
-        <a class="btn btn-border-w btn-round" href="#">{% trans 'Get a joke' %}</a>
+        <div class="font-alt mb-40 titan-title-size-3" id="joke-container">{% trans 'Put on a happy face' %}</div>
+        <a class="btn btn-border-w btn-round" href="{{ joke_url }}"
+           id="main-joke-button" type="button">
+          {% trans 'Get a joke' %}</a>
       </div>
     </div>
   </section>
   <div class="scroll-up"><a href="#"><i class="fa fa-angle-double-up"></i></a></div>
+{% endblock %}
+
+{% block extrajs %}
+  <script src="{% static 'js/public/index-joke.js' %}"></script>
 {% endblock %}
