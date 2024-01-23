@@ -1,17 +1,8 @@
 {% extends 'Public/base.html' %}
-{% load static i18n %}
+{% load static i18n hosts %}
 
 {% block content %}
-  <section class="module bg-dark-30" data-background="{% static 'titan/images/section-4.jpg' %}"
-           style="background-image: url({% static 'titan/images/section-4.jpg' %});">
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-6 col-sm-offset-3">
-          <h1 class="module-title font-alt mb-0">{% trans 'Register' %}</h1>
-        </div>
-      </div>
-    </div>
-  </section>
+  {% include 'Public/Account/upper_section.html' with phrase=_("Register") %}
 
   <section class="module">
     <div class="container">
@@ -47,6 +38,11 @@
               <button class="btn btn-round btn-b">{% trans 'Register' %}</button>
             </div>
           </form>
+          <div class="form-group">
+            <div class="col col-6">
+              <a href="{% host_url 'home-login' host 'public' %}">{% trans 'Back to login' %}</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -8,7 +8,8 @@ $('#main-joke-button').on('click', function (e) {
             method: 'GET',
         }).done(function (data, status, xhr) {
             if (xhr?.status == 200) {
-                // $('#joke-container').html(data?.text);
+                $('#joke-container').html(data?.text);
+                $('html, body').animate({scrollTop: 500}, 500);
             }
         }).fail(function (e) {
 

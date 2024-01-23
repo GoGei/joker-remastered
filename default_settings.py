@@ -192,6 +192,7 @@ CACHES = {
         }
     }
 }
+JOKES_CACHE_TTL = 60 * 60 * 24  # 1d
 
 CELERY_BROKER_URL = ''
 CELERY_RESULT_BACKEND = 'rpc'

@@ -1,5 +1,5 @@
 from django.utils.decorators import method_decorator
-from rest_framework import viewsets, renderers
+from rest_framework import viewsets, renderers, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -29,7 +29,8 @@ class JokesRenderViewSetMixin(MappedSerializerVMixin, viewsets.ReadOnlyModelView
             ids = []
 
         jokes = queryset.filter(id__in=ids)
-        return Response({'jokes': jokes}, template_name='Api/joke_items.html')
+        data = self.get_serializer(instance=jokes, many=True).data
+        return Response({'jokes': data}, template_name='Api/joke_items.html')
 
     @action(detail=True, methods=['get'], url_path='render', url_name='render-retrieve',
             renderer_classes=(renderers.TemplateHTMLRenderer,))
@@ -37,3 +38,13 @@ class JokesRenderViewSetMixin(MappedSerializerVMixin, viewsets.ReadOnlyModelView
         response = self.retrieve(request, *args, **kwargs)
         joke = response.data
         return Response({'joke': joke}, template_name='Api/joke_card.html')
+
+
+class JokesReadOnlyViewSet(MappedSerializerVMixin, viewsets.ReadOnlyModelViewSet):
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter)
+    search_fields = ('^text', 'slug')
+    ordering_fields = ('slug',)
+
+
+class JokesReadOnlyRenderViewSet(JokesReadOnlyViewSet, JokesRenderViewSetMixin):
+    pass
