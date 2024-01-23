@@ -1,7 +1,7 @@
 from typing import List, Dict
 
 from django.db import models
-from django.db.models import OuterRef, Subquery, Func, F, Q
+from django.db.models import OuterRef, Subquery, Func, F, Q, Case, When, Value, IntegerField
 from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -10,6 +10,9 @@ from core.Utils.Mixins.models import CrmMixin, SlugifyMixin, ExportableMixin, Ac
 
 
 class JokeQuerySet(ActiveQuerySet):
+    def ordered(self):
+        return self.order_by('slug')
+
     def annotate_likes(self):
         likes_qub_query = (
             JokeLikeStatus.objects.select_related('joke')
@@ -19,8 +22,30 @@ class JokeQuerySet(ActiveQuerySet):
         )
         return self.annotate(likes_annotated=Subquery(likes_qub_query))
 
+    def annotate_is_liked_by_user(self, user):
+        if not user:
+            return self.none()
+
+        likes_qub_query = (
+            JokeLikeStatus.objects.select_related('joke')
+            .filter(joke=OuterRef('pk'), user=user)
+            .values('is_liked')
+        )
+        return self.annotate(is_liked_by_user_annotated=Subquery(likes_qub_query))
+
     def __get_seen_joke_ids(self, user):
-        jokes_seen_by_user = JokeSeen.objects.filter(user=user).order_by('-seen_stamp')
+        if not user:
+            return self.none()
+
+        jokes_seen_by_user = JokeSeen.objects.filter(user=user)
+        joke_ids = jokes_seen_by_user.values_list('joke_id', flat=True)
+        return joke_ids
+
+    def __get_liked_joke_ids(self, user):
+        if not user:
+            return self.none()
+
+        jokes_seen_by_user = JokeLikeStatus.objects.filter(user=user, is_liked=True)
         joke_ids = jokes_seen_by_user.values_list('joke_id', flat=True)
         return joke_ids
 
@@ -30,6 +55,14 @@ class JokeQuerySet(ActiveQuerySet):
 
     def not_seen_by_user(self, user):
         ids = self.__get_seen_joke_ids(user)
+        return self.filter(~Q(id__in=ids))
+
+    def liked_by_user(self, user):
+        ids = self.__get_liked_joke_ids(user)
+        return self.filter(id__in=ids)
+
+    def not_liked_by_user(self, user):
+        ids = self.__get_liked_joke_ids(user)
         return self.filter(~Q(id__in=ids))
 
 
@@ -154,6 +187,7 @@ class JokeLikeStatus(models.Model):
         db_table = 'joke_like_status'
         indexes = [
             models.Index(fields=['joke', 'user']),
+            models.Index(fields=['is_liked', 'user']),
         ]
 
     def like(self):

@@ -1,0 +1,17 @@
+{% extends 'Public/base.html' %}
+{% load static %}
+
+{% block content %}
+  <div id="seen-jokes-div" data-jokes-url="{{ jokes_url }}">
+    <section class="module">
+      <div class="container">
+      </div>
+    </section>
+    <div class="scroll-up"><a href="#"><i class="fa fa-angle-double-up"></i></a></div>
+  </div>
+{% endblock %}
+
+{% block extrajs %}
+  <script src="{% static 'js/public/seen-jokes.js' %}"></script>
+{% endblock %}
+

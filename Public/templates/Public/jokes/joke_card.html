@@ -1,7 +1,14 @@
 {% load i18n %}
 
 <div class="row">
-  <h2 class="module-title font-alt">{% trans 'Joke' %} {% if counter %}#{{ counter }}{% endif %}</h2>
+  <h2 class="module-title font-alt">{% trans 'Joke' %}
+    {% if request.user.is_authenticated %}
+      <div class="team-social">
+        <a href="#"><i class="fa fa-thumbs-up {% if joke.is_liked == True %}liked{% endif %}"></i></a>
+        <a href="#"><i class="fa fa-thumbs-down {% if joke.is_liked == False %}disliked{% endif %}"></i></a>
+      </div>
+    {% endif %}
+  </h2>
   <div class="module-subtitle large-text">
     {{ joke.text|safe|escape }}
   </div>
