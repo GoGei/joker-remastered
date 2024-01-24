@@ -13,6 +13,16 @@ class JokeQuerySet(ActiveQuerySet):
     def ordered(self):
         return self.order_by('slug')
 
+    def ordered_by_is_liked_by_user(self):
+        return self.order_by(
+            Case(
+                When(is_liked_by_user_annotated=True, then=Value(0)),
+                When(is_liked_by_user_annotated=False, then=Value(1)),
+                default=Value(2),
+                output_field=IntegerField(),
+            )
+        )
+
     def annotate_likes(self):
         likes_qub_query = (
             JokeLikeStatus.objects.select_related('joke')

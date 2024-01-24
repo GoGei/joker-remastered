@@ -122,5 +122,5 @@ class SeenJokesViewSet(AccountBaseJokesViewSet):
     def get_queryset(self):
         qs = super().get_queryset()
         qs = qs.seen_by_user(self.request.user)
-        qs = qs.order_by('is_liked_by_user_annotated')
+        qs = qs.ordered_by_is_liked_by_user()
         return qs

@@ -1,16 +1,11 @@
 Admin:
-- Add analytics to dashboard
 - Jokes liked by User
 - Add to users admins that have seen some jokes
 - Forget password (send email)
 - Jokes page PK as link
 
-Settings pages:
-* Redis
-
 Public:
 - User activation via emails
-- Order liked/disliked jokes
 - Add send jokes via telegram/email
 
 core:
