@@ -1,8 +1,5 @@
 Admin:
-- Jokes liked by User
-- Add to users admins that have seen some jokes
 - Forget password (send email)
-- Jokes page PK as link
 
 Public:
 - User activation via emails
