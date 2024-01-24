@@ -40,8 +40,10 @@ class UserManager(BaseUserManager):
         return self.filter(q)
 
     def users(self):
-        q = Q(is_staff=True) | Q(is_superuser=True)
-        return self.exclude(q)
+        non_admins_q = Q(is_staff=False, is_superuser=False)
+        admins_with_seen_jokes_q = Q(jokeseen__isnull=False)
+        q = non_admins_q | admins_with_seen_jokes_q
+        return self.prefetch_related('jokeseen_set').filter(q).distinct()
 
     def active(self):
         return self.filter(is_active=True)

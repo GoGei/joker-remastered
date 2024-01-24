@@ -1,1 +1,2 @@
-{{ record.text|safe|escape|truncatechars:150 }}
+{% load hosts %}
+<a href="{% host_url 'admin-jokes-view' record.id host 'admin' %}">{{ record.text|safe|escape|truncatechars:150 }}</a>
