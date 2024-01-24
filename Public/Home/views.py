@@ -1,6 +1,6 @@
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django_hosts import reverse
+from Public.decorators import public_login_required
 
 
 def home_index(request):
@@ -13,13 +13,13 @@ def home_top(request):
     return render(request, 'Public/top.html', {'jokes_url': jokes_url})
 
 
-@login_required
+@public_login_required
 def home_favourite(request):
     jokes_url = reverse('api-v1:jokes-favourite-list', host='api')
     return render(request, 'Public/favourite.html', {'jokes_url': jokes_url})
 
 
-@login_required
+@public_login_required
 def home_seen(request):
     jokes_url = reverse('api-v1:jokes-seen-list', host='api')
     return render(request, 'Public/seen.html', {'jokes_url': jokes_url})
