@@ -11,6 +11,7 @@ django-ckeditor==6.7.0
 mongoengine==0.27.0
 django-mongoengine-filter==0.4.2
 Pillow==10.1.0
+premailer==3.10.0
 
 djangorestframework==3.13.1
 django-filter==21.1

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'core.Utils',
     'core.User',
     'core.Joke',
+    'core.Emailer',
 ]
 
 AUTH_USER_MODEL = 'User.User'
@@ -194,7 +195,7 @@ CACHES = {
 }
 JOKES_CACHE_TTL = 60 * 60 * 24  # 1d
 
-CELERY_BROKER_URL = ''
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'rpc'
 CELERY_ACCEPT_CONTENT = ['pickle', 'json']
 CELERY_TASK_SERIALIZER = 'pickle'
@@ -212,4 +213,9 @@ MONGODB_LOGGER_ALIAS = 'logger'
 MONGODB_LOGGER_COLLECTION = 'log'
 register_connection(alias=MONGODB_LOGGER_ALIAS,
                     host='mongodb://127.0.0.1:27017/joker_remastered_logger',
+                    w=0)
+MONGODB_NOTIFICATION_ALIAS = 'notification'
+MONGODB_EMAIL_NOTIFICATION_COLLECTION = 'email_notification_message'
+register_connection(alias=MONGODB_NOTIFICATION_ALIAS,
+                    host=f'mongodb://127.0.0.1:27017/joker_remastered_notification',
                     w=0)
