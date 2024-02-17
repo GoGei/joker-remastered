@@ -29,3 +29,6 @@ class LikedJokesSerializer(AccountJokesSerializer):
 
 class JokeSendViaEmailSerializer(serializers.Serializer):
     receiver = serializers.EmailField()
+
+    def validate_receiver(self, receiver: str):
+        return receiver.strip()

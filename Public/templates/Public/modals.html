@@ -14,7 +14,7 @@
         <form id="sendJokeViaEmailForm" class="joke-send-form" autocomplete="off" novalidate>
           <div class="form-group">
             <input type="email" class="form-control" id="receiver" name="receiver"
-                   {% if request.user.is_authenticated %} value="{{ request.user.email }}" {% endif %}
+                {% if request.user.is_authenticated %} value="{{ request.user.email }}" {% endif %}
                    placeholder="Enter email to send" autofocus="">
           </div>
           <div class="form-group">
