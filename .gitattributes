@@ -3,3 +3,5 @@ htdocs/js/** linguist-vendored
 htdocs/sneat/** linguist-vendored
 htdocs/titan/** linguist-vendored
 htdocs/images/** linguist-vendored
+htdocs/js/admin/** linguist-vendored export-ignore
+htdocs/js/public/** linguist-vendored export-ignore
