@@ -1,6 +1,3 @@
-Public:
-- Add send jokes via telegram/email
-
 core:
 - Update jokes
 
