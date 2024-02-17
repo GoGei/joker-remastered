@@ -5,7 +5,9 @@ from Public.decorators import public_login_required
 
 def home_index(request):
     joke_url = reverse('api-v1:jokes-all-get-daily-joke', host='api')
-    return render(request, 'Public/index.html', {'joke_url': joke_url})
+    clear_seen_jokes_url = reverse('api-v1:jokes-all-clear-seen-daily-jokes', host='api')
+    return render(request, 'Public/index.html', {'joke_url': joke_url,
+                                                 'clear_seen_jokes_url': clear_seen_jokes_url})
 
 
 def home_top(request):

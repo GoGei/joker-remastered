@@ -7,7 +7,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from core.Joke.models import Joke, JokeSeen
+from core.Joke.models import Joke, JokeSeen, JokeLikeStatus
 from . import base_views
 from .filters import AccountJokesFilter
 from .serializers import JokeSerializer, LikedJokesSerializer, AccountJokesSerializer
@@ -56,7 +56,7 @@ class JokesViewSet(base_views.JokesReadOnlyRenderViewSet):
 
         if not joke:
             response = {'text': _('There are no more jokes for today!')}
-            return Response(response)
+            return Response(response, status=status.HTTP_202_ACCEPTED)
         return Response(self.get_serializer(instance=joke).data)
 
     @action(detail=False, methods=['post'], url_path='clear-seen-daily-jokes', url_name='clear-seen-daily-jokes')
@@ -65,14 +65,16 @@ class JokesViewSet(base_views.JokesReadOnlyRenderViewSet):
 
         if user.is_authenticated:
             JokeSeen.objects.filter(user=user).delete()
+            JokeLikeStatus.objects.filter(user=user).delete()
         else:
             cache.delete('seen_jokes')
         return Response(status=status.HTTP_200_OK)
 
 
 class AccountBaseJokesViewSet(base_views.JokesReadOnlyRenderViewSet):
-    queryset = Joke.objects.active()
-    serializer_class = AccountJokesSerializer
+    queryset = Joke.objects.active().annotate_likes()
+    # serializer_class = AccountJokesSerializer
+    serializer_class = LikedJokesSerializer
 
     def get_queryset(self):
         user = self.request.user
@@ -122,5 +124,5 @@ class SeenJokesViewSet(AccountBaseJokesViewSet):
     def get_queryset(self):
         qs = super().get_queryset()
         qs = qs.seen_by_user(self.request.user)
-        qs = qs.ordered_by_is_liked_by_user()
+        qs = qs.ordered_by_is_liked_by_user('-likes_annotated')
         return qs

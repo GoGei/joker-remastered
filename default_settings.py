@@ -5,6 +5,8 @@ BASE_DIR = os.path.normpath(os.path.join(os.path.dirname(__file__))) + '/'
 
 SECRET_KEY = None
 HASHID_SECRET = None
+HASHID_ADMIN_SALT = None
+HASHID_PUBLIC_SALT = None
 DEBUG = True
 API_DOCUMENTATION = True
 DEBUG_TOOLBAR = False
@@ -195,7 +197,11 @@ CACHES = {
 }
 JOKES_CACHE_TTL = 60 * 60 * 24  # 1d
 
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
+REDIS_HOST = 'localhost'
+REDIS_PORT = '6379'
+REDIS_DB = '0'
+
+CELERY_BROKER_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}'
 CELERY_RESULT_BACKEND = 'rpc'
 CELERY_ACCEPT_CONTENT = ['pickle', 'json']
 CELERY_TASK_SERIALIZER = 'pickle'

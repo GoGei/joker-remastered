@@ -2,7 +2,6 @@ Admin:
 - Forget password (send email)
 
 Public:
-- User activation via emails
 - Add send jokes via telegram/email
 
 core:
