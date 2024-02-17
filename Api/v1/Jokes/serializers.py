@@ -25,3 +25,7 @@ class LikedJokesSerializer(AccountJokesSerializer):
     class Meta(JokeSerializer.Meta):
         model = Joke
         fields = read_only_fields = AccountJokesSerializer.Meta.fields + ('likes',)
+
+
+class JokeSendViaEmailSerializer(serializers.Serializer):
+    receiver = serializers.EmailField()

@@ -1,0 +1,27 @@
+{% load i18n %}
+
+<div class="modal fade" id="sendJokeViaEmail" tabindex="-1" role="dialog" aria-labelledby="sendJokeViaEmail"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="sendJokeViaEmail">{% trans 'Send joke via email' %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="sendJokeViaEmailForm" class="joke-send-form" autocomplete="off" novalidate>
+          <div class="form-group">
+            <input type="email" class="form-control" id="receiver" name="receiver"
+                   {% if request.user.is_authenticated %} value="{{ request.user.email }}" {% endif %}
+                   placeholder="Enter email to send" autofocus="">
+          </div>
+          <div class="form-group">
+            <button class="btn btn-round btn-b">{% trans 'Send' %}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

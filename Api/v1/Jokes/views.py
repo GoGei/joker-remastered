@@ -8,9 +8,10 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from core.Joke.models import Joke, JokeSeen, JokeLikeStatus
+from core.Joke.senders import EmailSender
 from . import base_views
 from .filters import AccountJokesFilter
-from .serializers import JokeSerializer, LikedJokesSerializer, AccountJokesSerializer
+from .serializers import JokeSerializer, LikedJokesSerializer, JokeSendViaEmailSerializer
 
 
 class JokesViewSet(base_views.JokesReadOnlyRenderViewSet):
@@ -18,7 +19,8 @@ class JokesViewSet(base_views.JokesReadOnlyRenderViewSet):
     permission_classes = (AllowAny,)
     serializer_class = LikedJokesSerializer
     serializer_map = {
-        'get_daily_jokes': JokeSerializer
+        'get_daily_jokes': JokeSerializer,
+        'send_via_email': JokeSendViaEmailSerializer,
     }
     empty_serializers = ('clear_seen_daily_jokes',)
 
@@ -68,6 +70,14 @@ class JokesViewSet(base_views.JokesReadOnlyRenderViewSet):
             JokeLikeStatus.objects.filter(user=user).delete()
         else:
             cache.delete('seen_jokes')
+        return Response(status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'], url_path='send-via-email', url_name='send-via-email')
+    def send_via_email(self, request, *args, **kwargs):
+        joke = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        EmailSender().send(joke, receiver=serializer.validated_data.get('receiver'))
         return Response(status=status.HTTP_200_OK)
 
 
