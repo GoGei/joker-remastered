@@ -157,7 +157,7 @@ def jokes_export(request):
     response['Content-Disposition'] = 'attachment; filename=%s' % filename
     response['Cache-Control'] = 'no-cache'
 
-    log.info('jokes_export', _('Jokes exported successfully'), user=request.user)
+    log.info('jokes_export', _('Jokes exported successfully'), user=request.user.id)
     return response
 
 
@@ -172,7 +172,7 @@ def jokes_import(request):
             form_body.run()
             msg = _('Jokes imported successfully')
             messages.success(request, msg)
-            log.info('jokes_import', msg, user=request.user)
+            log.info('jokes_import', msg, user=request.user.id)
             return redirect(reverse('admin-jokes-list', host='admin'))
         except Exception as e:
             form_body.add_error(None, e)
@@ -205,7 +205,7 @@ def jokes_load_default_fixture(request):
 
         msg = _('Jokes imported successfully')
         messages.success(request, msg)
-        log.info('joke_load_default_fixture', msg, user=request.user)
+        log.info('joke_load_default_fixture', msg, user=request.user.id)
         return redirect(reverse('admin-jokes-list', host='admin'))
     except Exception as e:
         messages.warning(request, _('Jokes not imported! Error: %s') % e)

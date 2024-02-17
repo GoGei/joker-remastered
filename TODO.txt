@@ -1,4 +1,1 @@
-core:
-- Update jokes
-
 Write tests
