@@ -3,8 +3,10 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.utils.translation import gettext_lazy as _
+
+from core.User.senders import AdminForgotPasswordSender
 from core.Utils.Access.user_check_functions import manager_check
-from .forms import LoginForm, ForgotPasswordForm
+from .forms import LoginForm, ForgotPasswordForm, ForgotPasswordConfirmForm
 
 
 def login_view(request):
@@ -51,6 +53,24 @@ def forgot_password_view(request):
 
 def forgot_password_success_view(request):
     return render(request, 'Admin/Login/forgot_password_success.html')
+
+
+def forgot_password_confirm_view(request, key):
+    user = AdminForgotPasswordSender().get(key)
+    if not user:
+        return render(request, 'Admin/Login/forgot_password_confirm_error.html')
+    if not user.is_active or not (user.is_staff or user.is_superuser):
+        return render(request, 'Admin/Login/forgot_password_confirm_error.html')
+
+    form = ForgotPasswordConfirmForm(request.POST or None,
+                                     key=key, user=user)
+    if form.is_valid():
+        user = form.save()
+        login(request, user)
+        return redirect(reverse('admin-login', host='admin'))
+    else:
+        print(form.errors)
+    return render(request, 'Admin/Login/forgot_password_confirm.html', {'form': form})
 
 
 def logout_view(request):

@@ -89,7 +89,7 @@ class PublicForgotPasswordSender(BaseSender):
 
 class AdminForgotPasswordSender(BaseSender):
     def send(self, user: User):
-        reverse_url = 'admin-forgot-password'
+        reverse_url = 'admin-forgot-password-confirm'
         extra_value = user.hash_str_to_int(reverse_url)
         activation_key = self.encoder(user, settings.HASHID_ADMIN_SALT, extra_value)
         UserRedisService().set_user_admin_forgot_password_key(user, activation_key)
@@ -110,7 +110,7 @@ class AdminForgotPasswordSender(BaseSender):
         user_id = self.service.get_user_admin_forgot_password_by_key(key)
         if not user_id:
             return None
-        return User.objects.get(id=user_id)
+        return User.objects.managers().get(id=user_id)
 
     def delete(self, key: str):
         return self.service.delete_user_admin_forgot_password_key(key)

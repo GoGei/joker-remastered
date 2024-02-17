@@ -80,7 +80,7 @@ def forgot_password_success_view(request):
     return render(request, 'Public/Account/forgot_password_success.html')
 
 
-def forgot_password_confirm(request, key):
+def forgot_password_confirm_view(request, key):
     user = PublicForgotPasswordSender().get(key)
     if not user:
         return render(request, 'Public/Account/forgot_password_confirm_error.html')

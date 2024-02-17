@@ -11,5 +11,5 @@ urlpatterns = [
 
     url(r'forgot-password/$', views.forgot_password_view, name='home-forgot-password'),
     url(r'forgot-password/success/$', views.forgot_password_success_view, name='home-forgot-password-success'),
-    url(r'forgot-password/confirm/(?P<key>.*)$', views.forgot_password_confirm, name='home-forgot-password-confirm'),
+    url(r'forgot-password/confirm/(?P<key>.*)$', views.forgot_password_confirm_view, name='home-forgot-password-confirm'),
 ]

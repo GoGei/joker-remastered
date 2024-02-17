@@ -94,7 +94,7 @@ class ForgotPasswordForm(forms.Form):
 class ForgotPasswordConfirmForm(UserPasswordForm):
     def __init__(self, *args, **kwargs):
         self.key = kwargs.pop('key')
-        self.user = kwargs.pop('key')
+        self.user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
 
     def save(self):
