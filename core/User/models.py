@@ -5,6 +5,9 @@ from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 
+from core.Utils.Mixins.models import HashableMixin
+from core.Emailer.models import EmailNotification
+
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
@@ -49,7 +52,7 @@ class UserManager(BaseUserManager):
         return self.filter(is_active=True)
 
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, HashableMixin):
     email = models.EmailField(max_length=255, unique=True, db_index=True)
     first_name = models.CharField(max_length=50, null=True)
     last_name = models.CharField(max_length=50, null=True)

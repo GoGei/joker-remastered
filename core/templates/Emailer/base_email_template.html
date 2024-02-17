@@ -1,8 +1,15 @@
 <!DOCTYPE html>
+{% load i18n %}
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Base template</title>
+  <title>
+    {% if email_title %}
+      {{ email_title }}
+    {% else %}
+      {% trans 'Joker' %}
+    {% endif %}
+  </title>
 </head>
 <body>
 {{ rendered_text }}

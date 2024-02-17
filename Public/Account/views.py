@@ -3,7 +3,9 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.utils.translation import gettext_lazy as _
-from .forms import LoginForm, ForgotPasswordForm, RegisterForm
+from .forms import LoginForm, ForgotPasswordForm, RegisterForm, ForgotPasswordConfirmForm
+
+from core.User.senders import PublicRegistrationEmailSender
 
 
 def register_view(request):
@@ -17,6 +19,19 @@ def register_view(request):
 
 def register_success_view(request):
     return render(request, 'Public/Account/register_success.html')
+
+
+def register_confirm(request, key):
+    user = PublicRegistrationEmailSender().get(key)
+    if not user:
+        return render(request, 'Public/Account/register_confirm_no_user.html')
+
+    if not user.is_active:
+        user.is_active = True
+        user.save(update_fields=['is_active'])
+
+    login(request, user)
+    return redirect(reverse('home-index', host='public'))
 
 
 def login_view(request):
@@ -61,6 +76,16 @@ def forgot_password_view(request):
 
 def forgot_password_success_view(request):
     return render(request, 'Public/Account/forgot_password_success.html')
+
+
+def forgot_password_confirm(request, key):
+    form = ForgotPasswordConfirmForm(request.POST or None,
+                                     key=key)
+    if form.is_valid():
+        user = form.save()
+        login(request, user)
+        return redirect(reverse('home-index', host='public'))
+    return render(request, 'Public/Account/forgot_password_confirm.html')
 
 
 def logout_view(request):

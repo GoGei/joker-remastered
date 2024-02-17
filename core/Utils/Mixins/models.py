@@ -1,5 +1,8 @@
+import time
+import hashlib
 from typing import List, Dict
 from slugify import slugify
+from hashids import Hashids
 
 from django.db import models, transaction
 from django.utils import timezone
@@ -159,3 +162,53 @@ class ExportableMixin(models.Model):
         cls.validate_data(data)
         cls.import_data(data)
         return True
+
+
+class HashableMixin(models.Model):
+    class Meta:
+        abstract = True
+
+    @classmethod
+    def __hashid(cls, salt=''):
+        return Hashids(salt=settings.HASHID_SECRET + str(cls.__name__) + salt, min_length=8)
+
+    def hashid_encode(self, salt='', *values):
+        # accept only integers
+        timestamp = int(time.time())
+        return self.__hashid(salt=salt).encode(timestamp, self.id, *values)
+
+    @classmethod
+    def hashid_decode(cls, hash_id, salt=''):
+        return cls.__hashid(salt=salt).decode(hash_id)
+
+    @property
+    def hash_id(self):
+        return getattr(self, '_hash_id', self.hashid_encode())
+
+    @classmethod
+    def get_hashid_queryset(cls):
+        return cls.objects.all()
+
+    @classmethod
+    def get_by_hash_id(cls, hash_id, salt=''):
+        data = cls.hashid_decode(hash_id, salt=salt)
+        if not data:
+            raise cls.DoesNotExist
+
+        try:
+            obj = cls.get_hashid_queryset().get(pk=data[1])
+        except IndexError:
+            raise cls.DoesNotExist
+        setattr(obj, '_hash_id', hash_id)
+        return obj
+
+    @classmethod
+    def get_by_hash_id_safe(cls, *args, **kwargs):
+        try:
+            return cls.get_by_hash_id(*args, **kwargs)
+        except cls.DoesNotExist:
+            return None
+
+    @classmethod
+    def hash_str_to_int(cls, value: str) -> int:
+        return int(hashlib.sha1(str(value).encode("utf-8")).hexdigest(), 16)
