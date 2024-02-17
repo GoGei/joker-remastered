@@ -16,7 +16,13 @@ class BaseSender(object):
         raise NotImplementedError
 
     def get(self, key: str) -> Optional[User]:
-        raise NotImplementedError
+        user_id = self.service.get(key)
+        if not user_id:
+            return None
+        return User.objects.get(id=user_id)
+
+    def delete(self, key: str):
+        return self.service.delete(key)
 
     @classmethod
     def encoder(cls, user: User, salt: str, *values):
@@ -48,6 +54,9 @@ class PublicRegistrationEmailSender(BaseSender):
             return None
         return User.objects.get(id=user_id)
 
+    def delete(self, key: str):
+        return self.service.delete_user_public_registration_key(key)
+
 
 class PublicForgotPasswordSender(BaseSender):
     def send(self, user: User):
@@ -74,6 +83,9 @@ class PublicForgotPasswordSender(BaseSender):
             return None
         return User.objects.get(id=user_id)
 
+    def delete(self, key: str):
+        return self.service.delete_user_public_forgot_password_key(key)
+
 
 class AdminForgotPasswordSender(BaseSender):
     def send(self, user: User):
@@ -99,3 +111,6 @@ class AdminForgotPasswordSender(BaseSender):
         if not user_id:
             return None
         return User.objects.get(id=user_id)
+
+    def delete(self, key: str):
+        return self.service.delete_user_admin_forgot_password_key(key)

@@ -10,6 +10,9 @@
         <a class="btn btn-border-w btn-round" href="{{ joke_url }}"
            id="main-joke-button" type="button">
           {% trans 'Get a joke' %}</a>
+
+        <a class="btn btn-border-w btn-round" href="{{ clear_seen_jokes_url }}"
+           id="main-clear-seen-jokes-button" type="button" style="display: none;">{% trans 'Clear seen jokes' %}</a>
       </div>
     </div>
   </section>
@@ -18,13 +21,13 @@
     <div class="container">
       <div class="post">
         <div class="post-quote titan-title-size-1" id="joke-container" style="color: black;">
-            {% trans 'There will be joke :)' %}
+          {% trans 'There will be joke :)' %}
         </div>
       </div>
     </div>
   </section>
 
-  <div class="scroll-up"><a href="#"><i class="fa fa-angle-double-up"></i></a></div>
+  {% include 'Public/items/scroll_up.html' %}
 {% endblock %}
 
 {% block extrajs %}

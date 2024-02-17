@@ -94,24 +94,15 @@ class ForgotPasswordForm(forms.Form):
 class ForgotPasswordConfirmForm(UserPasswordForm):
     def __init__(self, *args, **kwargs):
         self.key = kwargs.pop('key')
+        self.user = kwargs.pop('key')
         super().__init__(*args, **kwargs)
-
-    def clean(self):
-        cleaned_data = self.cleaned_data
-
-        user = PublicForgotPasswordSender().get(self.key)
-        if not user:
-            self.add_error(None, _('Key is invalid or expired!'))
-        else:
-            cleaned_data['user'] = user
-
-        return cleaned_data
 
     def save(self):
         data = self.cleaned_data
-        user = data.get('user')
+        user = self.user
         password = data.get('password')
 
         user.set_password(password)
         user.save()
+        PublicForgotPasswordSender().delete(self.key)
         return user

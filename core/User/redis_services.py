@@ -44,6 +44,10 @@ class UserRedisService(object):
         with Redis(**self.settings) as r:
             return r.get(key)
 
+    def delete(self, key: str):
+        with Redis(**self.settings) as r:
+            return r.delete(key)
+
     def set_user_public_registration_key(self, user, registration_key: str):
         with Redis(**self.settings) as r:
             key = self.key_former.form_public_registration_key(registration_key)
@@ -52,6 +56,10 @@ class UserRedisService(object):
     def get_user_public_registration_by_key(self, registration_key: str):
         key = self.key_former.form_public_registration_key(registration_key)
         return self.get(key)
+
+    def delete_user_public_registration_key(self, registration_key: str):
+        key = self.key_former.form_public_registration_key(registration_key)
+        return self.delete(key)
 
     def set_user_admin_forgot_password_key(self, user, activation_key: str):
         with Redis(**self.settings) as r:
@@ -62,6 +70,10 @@ class UserRedisService(object):
         key = self.key_former.form_admin_forgot_password_key(activation_key)
         return self.get(key)
 
+    def delete_user_admin_forgot_password_key(self, activation_key: str):
+        key = self.key_former.form_admin_forgot_password_key(activation_key)
+        return self.delete(key)
+
     def set_user_public_forgot_password_key(self, user, activation_key: str):
         with Redis(**self.settings) as r:
             key = self.key_former.form_public_forgot_password_key(activation_key)
@@ -70,3 +82,7 @@ class UserRedisService(object):
     def get_user_public_forgot_password_by_key(self, activation_key: str):
         key = self.key_former.form_public_forgot_password_key(activation_key)
         return self.get(key)
+
+    def delete_user_public_forgot_password_key(self, activation_key: str):
+        key = self.key_former.form_public_forgot_password_key(activation_key)
+        return self.delete(key)

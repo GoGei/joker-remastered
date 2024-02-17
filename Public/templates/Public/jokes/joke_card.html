@@ -2,20 +2,33 @@
 
 <div class="row">
   <h2 class="module-title font-alt">{% trans 'Joke' %}
-    {% if request.user.is_authenticated %}
-      <div class="team-social joke-container"
-           data-like-joke-url="{% host_url 'api-v1:jokes-account-like' joke.id host 'api' %}"
-           data-dislike-joke-url="{% host_url 'api-v1:jokes-account-dislike' joke.id host 'api' %}"
-           data-deactivate-joke-url="{% host_url 'api-v1:jokes-account-deactivate' joke.id host 'api' %}"
-      >
-        <a href="#">
-          <i class="fa fa-thumbs-up joke-like {% if joke.is_liked == True %}liked{% endif %} "></i>
-        </a>
-        <a href="#">
-          <i class="fa fa-thumbs-down joke-dislike {% if joke.is_liked == False %}disliked{% endif %} "></i>
-        </a>
-      </div>
-    {% endif %}
+    {% with likes=joke.likes %}
+      {% if request.user.is_authenticated %}
+        <div class="team-social joke-container"
+             data-like-joke-url="{% host_url 'api-v1:jokes-account-like' joke.id host 'api' %}"
+             data-dislike-joke-url="{% host_url 'api-v1:jokes-account-dislike' joke.id host 'api' %}"
+             data-deactivate-joke-url="{% host_url 'api-v1:jokes-account-deactivate' joke.id host 'api' %}"
+        >
+          <a href="#">
+            <i class="fa fa-thumbs-up joke-like {% if joke.is_liked == True %}liked{% endif %}">
+              <span>{% if likes > 0 %}{{ likes }}{% endif %}</span>
+            </i>
+          </a>
+          <a href="#">
+            <i class="fa fa-thumbs-down joke-dislike {% if joke.is_liked == False %}disliked{% endif %} "></i>
+          </a>
+        </div>
+      {% else %}
+        <div class="team-social joke-container">
+          <a href="#" disabled>
+            <i class="fa fa-thumbs-up {% if likes > 0 %}liked{% endif %}">
+              {% if likes > 0 %}{{ likes }}{% endif %}
+            </i>
+          </a>
+        </div>
+      {% endif %}
+    {% endwith %}
+
   </h2>
   <div class="module-subtitle large-text">
     {{ joke.text|safe|escape }}

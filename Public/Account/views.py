@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.utils.translation import gettext_lazy as _
 from .forms import LoginForm, ForgotPasswordForm, RegisterForm, ForgotPasswordConfirmForm
 
-from core.User.senders import PublicRegistrationEmailSender
+from core.User.senders import PublicRegistrationEmailSender, PublicForgotPasswordSender
 
 
 def register_view(request):
@@ -22,7 +22,8 @@ def register_success_view(request):
 
 
 def register_confirm(request, key):
-    user = PublicRegistrationEmailSender().get(key)
+    sender = PublicRegistrationEmailSender()
+    user = sender.get(key)
     if not user:
         return render(request, 'Public/Account/register_confirm_no_user.html')
 
@@ -31,6 +32,7 @@ def register_confirm(request, key):
         user.save(update_fields=['is_active'])
 
     login(request, user)
+    sender.delete(key)
     return redirect(reverse('home-index', host='public'))
 
 
@@ -79,8 +81,12 @@ def forgot_password_success_view(request):
 
 
 def forgot_password_confirm(request, key):
+    user = PublicForgotPasswordSender().get(key)
+    if not user:
+        return render(request, 'Public/Account/forgot_password_confirm_error.html')
+
     form = ForgotPasswordConfirmForm(request.POST or None,
-                                     key=key)
+                                     key=key, user=user)
     if form.is_valid():
         user = form.save()
         login(request, user)
