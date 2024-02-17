@@ -78,6 +78,8 @@
 
   {% block content %}
   {% endblock %}
+
+  {% include 'Public/modals.html' %}
 </main>
 <!--
 JavaScripts
@@ -99,6 +101,7 @@ JavaScripts
 
 <script src="{% static 'js/public/main.js' %}"></script>
 <script src="{% static 'js/public/jokes-like-dislike.js' %}"></script>
+<script src="{% static 'js/public/jokes-send-via-email.js' %}"></script>
 
 {% block extrajs %}
 {% endblock %}
