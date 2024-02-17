@@ -12,8 +12,10 @@ $('body').on('click', '.joke-like', function (e) {
 
     if (!$likedElem.hasClass(LIKED_CLASS)) {
         likeJoke($likedElem, $dislikedElem);
+        changeLikesCounter($likedElem, 1);
     } else {
         deactivateJoke($likedElem, $dislikedElem);
+        changeLikesCounter($likedElem, -1);
     }
 });
 
@@ -26,6 +28,7 @@ $('body').on('click', '.joke-dislike', function (e) {
 
     if (!$dislikedElem.hasClass(DISLIKED_CLASS)) {
         dislikeJoke($likedElem, $dislikedElem);
+        changeLikesCounter($likedElem, -1);
     } else {
         deactivateJoke($likedElem, $dislikedElem);
     }
@@ -106,4 +109,15 @@ function addClsAnimated($elem, cls) {
             opacity: 1
         }, ANIMATE_SPEED);
     });
+}
+
+function changeLikesCounter($elem, counter) {
+    let $container = $elem.find('span');
+    let likes = parseInt($container.text()) || 0;
+    let result = likes + counter;
+    if (result <= 0) {
+        $container.empty();
+    } else {
+        $container.text(result);
+    }
 }

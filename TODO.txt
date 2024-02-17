@@ -1,5 +1,4 @@
 Public:
-- User activation via emails
 - Add send jokes via telegram/email
 
 core:

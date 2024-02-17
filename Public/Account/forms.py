@@ -1,7 +1,7 @@
 from django import forms
-from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from core.User.models import User
+from core.User.senders import PublicForgotPasswordSender, PublicRegistrationEmailSender
 
 
 class LoginForm(forms.Form):
@@ -19,9 +19,7 @@ class LoginForm(forms.Form):
         return password
 
 
-class RegisterForm(forms.Form):
-    email = forms.EmailField(max_length=254, required=True,
-                             widget=forms.EmailInput(attrs={'autofocus': True}))
+class UserPasswordForm(forms.Form):
     password = forms.CharField(label='Password', strip=True,
                                min_length=8, max_length=128,
                                widget=forms.PasswordInput(attrs={'autocomplete': 'password'}))
@@ -45,10 +43,32 @@ class RegisterForm(forms.Form):
 
         return cleaned_data
 
+
+class RegisterForm(UserPasswordForm):
+    email = forms.EmailField(max_length=254, required=True,
+                             widget=forms.EmailInput(attrs={'autofocus': True}))
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        users_qs = User.objects.filter(email__iexact=email)
+
+        active = users_qs.filter(is_active=True).first()
+        inactive = users_qs.filter(is_active=False).first()
+
+        if active:
+            self.add_error('email', _('User with this email already exists.'))
+        elif inactive:
+            msg = _('User with this email already waiting for confirmation. We will send message one more time')
+            self.add_error('email', msg)
+            PublicRegistrationEmailSender().send(inactive)
+
+        return email
+
     def save(self):
         email = self.cleaned_data.get('email')
         password = self.cleaned_data.get('password')
         user = User.objects.create_user(email=email, password=password, is_active=False)
+        PublicRegistrationEmailSender().send(user)
         return user
 
 
@@ -68,4 +88,21 @@ class ForgotPasswordForm(forms.Form):
 
     def send_forgot_password(self):
         user = self.cleaned_data.get('user')
-        # user.send_forgot_password_email()
+        PublicForgotPasswordSender().send(user)
+
+
+class ForgotPasswordConfirmForm(UserPasswordForm):
+    def __init__(self, *args, **kwargs):
+        self.key = kwargs.pop('key')
+        self.user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+
+    def save(self):
+        data = self.cleaned_data
+        user = self.user
+        password = data.get('password')
+
+        user.set_password(password)
+        user.save()
+        PublicForgotPasswordSender().delete(self.key)
+        return user

@@ -31,10 +31,7 @@
             <div class="col-4">{% trans 'ID' %}</div>
             <div class="col-8">{{ joke.id }}</div>
           </div>
-          <div class="row">
-            <div class="col-4">{% trans 'Slug' %}</div>
-            <div class="col-8">{{ joke.slug|default:'' }}</div>
-          </div>
+
           <div class="row">
             <div class="col-4">{% trans 'Is active' %}</div>
             <div class="col-8">
@@ -44,6 +41,10 @@
                 {% trans 'Not active' %}
               {% endif %}
             </div>
+          </div>
+          <div class="row">
+            <div class="col-4">{% trans 'Slug' %}</div>
+            <div class="col-8">{{ joke.slug|default:'' }}</div>
           </div>
           <div class="row">
             <div class="col-4">{% trans 'Text' %}</div>

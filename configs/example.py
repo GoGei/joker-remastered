@@ -2,6 +2,8 @@ from default_settings import *
 
 SECRET_KEY = 'super_secret_key'
 HASHID_SECRET = 'super_secret_key'
+HASHID_ADMIN_SALT = 'admin-extra-salt'
+HASHID_PUBLIC_SALT = 'public-extra-salt'
 DEBUG = True
 API_DOCUMENTATION = True
 DEBUG_TOOLBAR = False
