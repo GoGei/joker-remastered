@@ -18,9 +18,9 @@ SITE = "%s://%s:%s" % (SITE_SCHEME, SITE_URL, HOST_PORT)
 
 DATABASES['default']['PASSWORD'] = 'joker_remastered'
 
-EMAIL_HOST_USER = 'pocket.fridge.team@gmail.com'
-DEFAULT_FROM_EMAIL = 'pocket.fridge.team@gmail.com'
-EMAIL_HOST_PASSWORD = 'vtshzovfklygyhib'
+EMAIL_HOST_USER = 'user@example.com'
+DEFAULT_FROM_EMAIL = 'user@example.com'
+EMAIL_HOST_PASSWORD = 'password'
 
 if DEBUG and DEBUG_TOOLBAR:
     INSTALLED_APPS += ['debug_toolbar']
