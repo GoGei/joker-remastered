@@ -11,3 +11,5 @@ media/
 
 configs/*
 !configs/example.py
+
+joker_remastered
