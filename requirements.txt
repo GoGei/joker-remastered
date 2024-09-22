@@ -9,6 +9,7 @@ python-slugify==8.0.1
 django-widget-tweaks==1.5.0
 django-ckeditor==6.7.0
 mongoengine==0.27.0
+pymongo==4.6.1
 django-mongoengine-filter==0.4.2
 Pillow==10.1.0
 premailer==3.10.0

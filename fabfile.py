@@ -24,10 +24,15 @@ def runserver(c):
         with open('/etc/hosts') as f:
             if f.read().find(dj_settings.SITE_URL) != -1:
                 server_address = dj_settings.SITE_URL
+    if dj_settings.FORCE_FAB_URL:
+        server_address = dj_settings.SITE_URL
 
     with c.prefix(VIRTUAL_ENV_ACTIVATE):
         with c.cd(PROJECT_ROOT):
-            c.run(f'./manage.py runserver {server_address}:{port}', pty=True)
+            if port:
+                c.run(f'./manage.py runserver {server_address}:{port}', pty=True)
+            else:
+                c.run(f'./manage.py runserver {server_address}', pty=True)
 
 
 @task
